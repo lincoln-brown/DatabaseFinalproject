@@ -8,7 +8,7 @@ This file creates your application.
 from app import app, login_manager
 from flask import render_template, request, redirect, url_for, flash
 from flask_login import login_user, logout_user, current_user, login_required
-from app.forms import LoginForm
+from app.forms import LoginForm, SignupForm
 from app.models import UserProfile
 from werkzeug.security import check_password_hash
 
@@ -23,10 +23,25 @@ userdatabase={'id':'0011',
 # Routing for your application.
 ###
 
-@app.route('/')
+@app.route('/',methods=["GET","POST"])
 def home():
+    signupform=SignupForm()
+    if request.method == 'POST':
+        if signupform.validate_on_submit():
+            signupform.First_Name.data
+            signupform.Last_Name.data
+            signupform.Email.data
+            signupform.Password.data
+            signupform.Mobile_number.data
+            print('dss')
+            flash('Sign Up successfull,Lets Goo!.', 'success')
+            return redirect(url_for('login'))
+        else:
+            flash('Somting went wrong please try again!.', 'danger')
+            return render_template('home.html',form=signupform)
+            
     """Render website's home page."""
-    return render_template('home.html')
+    return render_template('home.html',form=signupform)
 
 
 @app.route('/about/')
@@ -37,8 +52,22 @@ def about():
 @app.route('/secure-page')
 @login_required 
 def secure_page():
+    return render_template("secure_page.html")
+
+@app.route('/profile')
+@login_required 
+def profile():
+    return render_template("secure_page.html")
+
+@app.route('/Groups')
+@login_required 
+def groups():
+    return render_template("secure_page.html")
 
 
+@app.route('/Comments_post')
+@login_required 
+def PandC():
     return render_template("secure_page.html")
 
 @app.route("/login", methods=["GET", "POST"])
@@ -58,6 +87,7 @@ def login():
             #flash('Login successful.', 'success')
             # remember to flash a message to the user
             print('login sucessfull')
+            return redirect(url_for('secure_page'))
             # they should be redirected to a secure-page route instead
         else:
             flash('Username or Password is incorrect.', 'danger')
@@ -73,7 +103,7 @@ def logout():
 
 
 
-
+#----------------------------------------------------------------------------------------------
 # user_loader callback. This callback is used to reload the user object from
 # the user ID stored in the session
 @login_manager.user_loader
