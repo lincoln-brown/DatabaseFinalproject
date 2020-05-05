@@ -8,8 +8,9 @@ This file creates your application.
 from app import app, login_manager
 from flask import render_template, request, redirect, url_for, flash
 from flask_login import login_user, logout_user, current_user, login_required
-from app.forms import LoginForm, SignupForm
+from app.forms import LoginForm, SignupForm,CommentForm
 from app.models import UserProfile
+from app.database import *
 from werkzeug.security import check_password_hash
 
 userdatabase={'id':'0011',
@@ -28,12 +29,12 @@ def home():
     signupform=SignupForm()
     if request.method == 'POST':
         if signupform.validate_on_submit():
-            signupform.First_Name.data
+            first=signupform.First_Name.data
             signupform.Last_Name.data
-            signupform.Email.data
+            email=signupform.Email.data
             signupform.Password.data
             signupform.Mobile_number.data
-            print('dss')
+            add_user(first,email)
             flash('Sign Up successfull,Lets Goo!.', 'success')
             return redirect(url_for('login'))
         else:
@@ -57,18 +58,55 @@ def secure_page():
 @app.route('/profile')
 @login_required 
 def profile():
-    return render_template("secure_page.html")
+    user={'photo':'thinking.png','username':'linkist10','first_name':'lincoln','last_name':'brown',
+    'email':'libks12@gmail.com.com',
+    'Address':'yuugy','gender':'male','mobile_number':'8767991129','DOB':'nov 5,1997','date_joined':'ddgg','biography':' Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa architecto dicta deleniti est, accusamus explicabo impedit blanditiis sapiente repellendus eligendi? Accusantium molestiae voluptates debitis, perspiciatis eos iusto commodi deleniti laudantium!'}
+    friends=[{'photo':'thinking.png','first_name':'lincoln','last_name':'brown','username':'linkist10','gender':'male'},
+    {'photo':'thinking.png','first_name':'lincoln','last_name':'brown','username':'linkist10','gender':'male'},
+    {'photo':'thinking.png','first_name':'lincoln','last_name':'brown','username':'linkist10','gender':'male'},
+    {'photo':'thinking.png','first_name':'lincoln','last_name':'brown','username':'linkist10','gender':'male'},
+    {'photo':'thinking.png','first_name':'lincoln','last_name':'brown','username':'linkist10','gender':'male'},
+    {'photo':'thinking.png','first_name':'lincoln','last_name':'brown','username':'linkist10','gender':'male'},
+    {'photo':'thinking.png','first_name':'lincoln','last_name':'brown','username':'linkist10','gender':'male'}]
+    return render_template("profile.html",user=user, usersfriends=friends)
 
 @app.route('/Groups')
 @login_required 
 def groups():
-    return render_template("secure_page.html")
+    return render_template("Groups.html")
 
 
 @app.route('/Comments_post')
 @login_required 
 def PandC():
-    return render_template("secure_page.html")
+    form=CommentForm()
+
+    friendspost=[{'name':'links',
+    'post':'Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste, nemo ex! Consequuntur quasi asperiores libero, vero explicabo dicta unde eos ipsam atque, corporis commodi aliquid laboriosam eligendi minima esse consectetur?',
+    'photo':'thinking.png',
+    'comments':[{'photo':'sleep.png','comentersname':'josh','comment':'comment here'},
+                {'photo':'sleep.png','comentersname':'paul','comment':'comment here2'},
+                {'photo':'sleep.png','comentersname':'josh','comment':'comment here'},
+                {'photo':'sleep.png','comentersname':'paul','comment':'comment here2'}]},
+    {'name':'links',
+    'post':'post here',
+    'photo':'thinking.png',
+    'comments':[{'photo':'sleep.png','comentersname':'josh','comment':'comment here'},
+                {'photo':'sleep.png','comentersname':'paul','comment':'comment here2'}]}
+    ]
+    
+    mypost=[{'name':'links',
+    'post':'Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste, nemo ex! Consequuntur quasi asperiores libero, vero explicabo dicta unde eos ipsam atque, corporis commodi aliquid laboriosam eligendi minima esse consectetur?',
+    'photo':'thinking.png',
+    'comments':[{'photo':'sleep.png','comentersname':'josh','comment':'comment here'},
+                {'photo':'sleep.png','comentersname':'paul','comment':'comment here2'}]},
+    {'name':'links',
+    'post':'Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste, nemo ex!laboriosam eligendi minima esse consectetur?',
+    'photo':'thinking.png',
+    'comments':[{'photo':'sleep.png','comentersname':'josh','comment':'comment here'},
+                {'photo':'sleep.png','comentersname':'paul','comment':'comment here2'}]}
+    ]
+    return render_template("commentPost.html",CommentForm=form,friendspost=friendspost,mypost=mypost)
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -77,6 +115,9 @@ def login():
         username = form.username.data
         password = form.password.data
         
+        userlog=get_user(username)
+        print(userlog)
+
         user = UserProfile(userdatabase['firstname'],userdatabase['lastname'],
         userdatabase['username'],userdatabase['Password'])
         user.id=userdatabase['username']

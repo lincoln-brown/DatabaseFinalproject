@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField
 from wtforms.validators import InputRequired, DataRequired, Email
-
+from wtforms.widgets import TextArea
 
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[InputRequired()])
@@ -14,4 +14,7 @@ class SignupForm(FlaskForm):
     Email = StringField('Email',validators=[DataRequired(), Email()])
     Password = PasswordField('Password',validators=[DataRequired()])
     Mobile_number= StringField('Mobile Number',validators=[DataRequired()])
+
+class CommentForm(FlaskForm):
+    Comments=StringField('Message',validators=[DataRequired()],widget=TextArea())
 	

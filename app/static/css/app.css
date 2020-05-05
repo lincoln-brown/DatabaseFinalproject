@@ -4,3 +4,146 @@ body {
 #signupform{
     width: 35%;
 }
+img.icons{
+	width: 2em;	
+	padding-bottom: 0em;
+	
+}
+img.pic{
+    width:200px;
+	margin-top: 2em;	
+    border-radius: 10%;
+    border: 1px solid black;
+
+}
+img.pic-post{
+    width:40px;
+	margin-top: 1em;	
+    border-radius: 50%;
+    margin-bottom: 5px;
+    margin-left: 0.5em;
+    
+
+}
+span.ds{
+	margin-left: 1em;
+	
+}
+div.mainblock{
+    display: flex;
+    
+}
+div.profile_details{
+    border: 1px solid black;
+    display: flex;
+	align-items: center;
+	flex-direction: column;
+    justify-content: start;
+    border-top: 0.5em solid rgb(35, 195, 89);
+	box-shadow: 5px 10px 18px #888888;
+	border-radius: 1em;
+    width: 30%;  
+   
+}
+div.profileaboutme{
+    margin-top: 2em;
+	width: 100%;
+	padding-left: 1em;
+	padding-right: 1em;
+}
+
+div.profilemorebtn{
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	margin-bottom: 2em;
+
+}
+div.profilemorebtn>button{
+	margin-left: 1em;
+	margin-right: 1em;
+	width: 10em;
+}
+div.usersfriends{
+    width: 60%;
+    margin-left: 5em;
+    padding-bottom: 1.5em;
+    border: 1px solid black;
+    border-top: 0.5em solid rgb(35, 195, 89);
+	box-shadow: 5px 10px 18px #888888;
+    border-radius: 1em;
+    height: 100em;
+    overflow: auto;
+}
+div.profile{
+    margin-left: 5%;
+    margin-right: 5%;
+	display: flex;
+    align-items: center;
+    border-top: 0.5em solid rgb(8, 163, 210);
+	box-shadow: 5px 10px 18px #888888;
+	border-radius: 1em;
+	width: 90%;	
+	margin-top: 2em;
+}
+div.friendspic,div.info,form.friendsbtn{
+    margin-bottom: 5%;
+    margin-left: 5%;
+}
+form.friendsbtn>a{
+    margin-bottom: 5%;
+    color: white;
+
+}
+.textare{
+    display: inline-block;
+    height: 5em;
+    width: 60%;
+    margin-left: 3em;
+    
+}
+div.comments{
+   width: 100%;
+     
+}
+button.commentsubmitbtn{
+    display: inline-block;
+   height: 5em;
+   width: 15%;
+   position: relative;
+   bottom: 2.3em;
+  
+}
+div.mypostblock,div.friendspostblock{
+    margin-left: 5%;
+    margin-right: 5%;
+    margin-bottom: 2%;
+    border-top: 0.5em solid rgb(8, 163, 210);
+	box-shadow: 5px 10px 18px #888888;
+    border-radius: 0.5em;
+    padding: 1em;
+    width: 95%;
+    
+
+}
+div.post{
+    margin: auto;
+    margin-top: 1%;
+    border-radius: 1em;
+    width: 95%;
+    padding: 2%;
+    background-color: rgb(212, 255, 251);
+}
+div.commentpost{
+    width: 90%;
+    padding: 1%;
+    border-radius: 0.5em;
+    border-bottom: 2px solid black;
+    margin: auto;
+    margin-bottom: 1em;
+    background-color: rgb(223, 223, 223);
+}
+div.mypostcontainer,div.friendpostcontainer{
+min-width: 40%;
+max-width: 50%;
+}

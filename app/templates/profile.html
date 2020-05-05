@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block header %}
+{% include "authHeader.html" %}
+{% endblock %}
+
+
+{% block main %}
+<h1>Profile</h1>
+<div class="mainblock">
+<div class="profile_details">
+    <div class="profilemoretop">
+         <div class="pic">
+             <img class="pic"  src={{url_for('static',filename="images/"+user.photo)}}/>
+         </div>
+         <br>
+         <div > 
+            <h5><strong>{{user.first_name}} {{user.last_name}}</strong></h5><br>
+            <img src="{{url_for('static', filename='icons/username.png')}}" alt="user" class="icons"><span class="ds">{{user.username}}</span> <br><br>
+            <img src="{{url_for('static', filename='icons/email.png')}}" alt="user" class="icons"><span class="ds">{{user.email}} </span><br><br>
+            <img src="{{url_for('static', filename='icons/mobile_number.png')}}" alt="user" class="icons"><span class="ds">{{user.mobile_number}}</span> <br><br>
+            <img src="{{url_for('static', filename='icons/birthdate.png')}}" alt="user" class="icons"><span class="ds">{{user.DOB}}</span> <br><br>
+            <img src="{{url_for('static', filename='icons/gender.png')}}" alt="user" class="icons"><span class="ds">{{user.gender}}</span> <br><br>
+            <img src="{{url_for('static', filename='icons/location.png')}}" alt="user" class="icons"><span class="ds">{{user.Address}}</span> <br><br>
+            <img src="{{url_for('static', filename='icons/date.png')}}" alt="user" class="icons"><span class="ds">Date Joined  {{user.date_joined}}</span>
+         </div>
+     </div>
+         <div class="profileaboutme">
+             <h5>About me </h5>
+             <p>{{user.biography}}</p>
+     
+    
+         </div>
+ <div class="profilemorebtn">
+     
+     <button class="btn btn-success">Make Post</button>
+     <button class="btn btn-primary">Photos</button>
+ 
+ </div>
+ 
+ 
+ </div>
+ <div class="usersfriends">
+    {% if usersfriends %}
+    {%for usersfriends in usersfriends %}
+    <div class="friends">
+        <div class="profile">
+            <div class="friendspic">
+                <img class="pic" src={{url_for('static',filename="images/"+usersfriends.photo)}}/>
+            </div>
+            <div class="info"> 
+             <h5><strong>{{usersfriends.first_name}} {{usersfriends.last_name}}</strong></h5>
+             <img src="{{url_for('static', filename='icons/user.png')}}" alt="user" class="icons"><span class="ds">{{usersfriends.username}}</span><br><br>
+             <img src="{{url_for('static', filename='icons/gender.png')}}" alt="user" class="icons"><span class="ds">{{usersfriends.gender}}</span>
+         </div >
+             <form class="friendsbtn" method="get" action="{{url_for('groups')}}">
+                 <a class="btn btn-success" href="#">View Profile</a>
+                 <a class="btn btn-primary" href="#">Follow</a>
+             </form>
+            
+             
+         </div>
+
+
+    </div>
+
+    {%endfor%}
+    {%endif%}
+
+
+
+ </div>
+ 
+</div>
+
+{% endblock %}

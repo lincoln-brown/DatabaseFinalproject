@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block header %}
+{% include "authHeader.html" %}
+{% endblock %}
+
+
+{% block main %}
+<h1>Comments</h1>
+<div class="mainblock">
+
+    <div class="mypostcontainer">
+        <h3>My Posts</h3>
+        {%for mypost in mypost %}
+        <div class="mypostblock">
+            <div class="post">
+                <img class="pic-post" src={{url_for('static',filename="images/"+mypost.photo)}}/>
+                <span class="ds">{{mypost.name}}</span><br><br>            
+                <p>{{mypost.post}}</p>
+            </div>
+                <h4>Comments</h4>
+            {%for comment in mypost.comments %}
+            <div class="commentpost">
+                <img class="pic-post" src={{url_for('static',filename="images/"+comment.photo)}}/>
+                <span class="ds">{{comment.comentersname}}</span><br>           
+                <p>{{comment.comment}}</p> 
+            </div>
+                {%endfor%}
+            <div class="comments">
+                <form action="">
+                    {{ CommentForm.Comments(class="md-textarea form-control textare") }}
+                    <button class="btn btn-warning commentsubmitbtn">Send</button>
+                </form>
+            </div>
+            </div>
+                {%endfor%}
+            </div>
+                
+                
+    <div class="friendpostcontainer">
+
+        <h2>Friends Posts</h2>
+        {%for friendspost in friendspost %}
+        <div class="friendspostblock">
+            
+            <div class="post">
+                <img class="pic-post" src={{url_for('static',filename="images/"+friendspost.photo)}}/>
+                <span class="ds">{{friendspost.name}}</span><br><br>
+                <p>{{friendspost.post}}</p>
+            </div>
+                <h4>Comments</h4>
+                {%for comment in friendspost.comments %}
+                <div class="commentpost">
+                    <img class="pic-post" src={{url_for('static',filename="images/"+comment.photo)}}/>
+                    <span class="ds">{{comment.comentersname}}</span><br>
+                    <p>{{comment.comment}}</p>
+                    </div>
+                    {%endfor%}
+                    <div class="comments">
+                <form action="">
+                    {{ CommentForm.Comments(class="md-textarea form-control textare") }}
+                    <button class="btn btn-warning commentsubmitbtn">Send</button>
+                </form>
+            </div>
+        </div>
+        {%endfor%}
+        
+        
+        
+    </div>
+</div>
+    {% endblock %}

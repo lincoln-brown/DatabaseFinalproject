@@ -3,20 +3,7 @@ from werkzeug.security import generate_password_hash
 
 
 class UserProfile():
-    
-    user={'id':'0011',
-    'firstname':'lincoln',
-    'lastname':"brown",
-    'username':"links",
-    'Password':"pasword123"
-    }
-   
-    id = user['id']
-    first_name = user['firstname']
-    last_name = user['lastname']
-    username = user['username']
-    password = user['Password']
-
+    id=""
 
     def __init__(self, first_name, last_name, username, password):
         self.first_name = first_name
