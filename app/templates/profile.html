@@ -10,18 +10,18 @@
 <div class="profile_details">
     <div class="profilemoretop">
          <div class="pic">
-             <img class="pic"  src={{url_for('static',filename="images/"+user.photo)}}/>
+             <img class="pic"  src={{url_for('static',filename="images/"+user.City)}}/>
          </div>
          <br>
          <div > 
-            <h5><strong>{{user.first_name}} {{user.last_name}}</strong></h5><br>
-            <img src="{{url_for('static', filename='icons/username.png')}}" alt="user" class="icons"><span class="ds">{{user.username}}</span> <br><br>
+            <h5><strong>{{user.Fname}} {{user.Lname}}</strong></h5><br>
+            <img src="{{url_for('static', filename='icons/username.png')}}" alt="user" class="icons"><span class="ds">{{user.Username}}</span> <br><br>
             <img src="{{url_for('static', filename='icons/email.png')}}" alt="user" class="icons"><span class="ds">{{user.email}} </span><br><br>
-            <img src="{{url_for('static', filename='icons/mobile_number.png')}}" alt="user" class="icons"><span class="ds">{{user.mobile_number}}</span> <br><br>
+            <img src="{{url_for('static', filename='icons/mobile_number.png')}}" alt="user" class="icons"><span class="ds">{{user.PhoneNumber}}</span> <br><br>
             <img src="{{url_for('static', filename='icons/birthdate.png')}}" alt="user" class="icons"><span class="ds">{{user.DOB}}</span> <br><br>
-            <img src="{{url_for('static', filename='icons/gender.png')}}" alt="user" class="icons"><span class="ds">{{user.gender}}</span> <br><br>
-            <img src="{{url_for('static', filename='icons/location.png')}}" alt="user" class="icons"><span class="ds">{{user.Address}}</span> <br><br>
-            <img src="{{url_for('static', filename='icons/date.png')}}" alt="user" class="icons"><span class="ds">Date Joined  {{user.date_joined}}</span>
+            <img src="{{url_for('static', filename='icons/gender.png')}}" alt="user" class="icons"><span class="ds">{{user.Gender}}</span> <br><br>
+            <img src="{{url_for('static', filename='icons/location.png')}}" alt="user" class="icons"><span class="ds">{{user.Street}}{{user.City}}</span> <br><br>
+            <img src="{{url_for('static', filename='icons/date.png')}}" alt="user" class="icons"><span class="ds">Date Joined  {{user.DOB}}</span>
          </div>
      </div>
          <div class="profileaboutme">

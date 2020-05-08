@@ -3,11 +3,10 @@ from werkzeug.security import generate_password_hash
 
 
 class UserProfile():
-    id=""
+    
 
-    def __init__(self, first_name, last_name, username, password):
-        self.first_name = first_name
-        self.last_name = last_name
+    def __init__(self,username, password):
+        self.id=username
         self.username = username
         self.password = generate_password_hash(password, method='pbkdf2:sha256')
 

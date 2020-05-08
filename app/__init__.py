@@ -10,8 +10,8 @@ app.config['SECRET_KEY'] = "change this to be a more random key"
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'DEVELOPER'
 app.config['MYSQL_PASSWORD'] = '@Links1010'
-app.config['MYSQL_DB'] = 'test'
-app.config['MYSQL_CURSSERCLASS']="DictCurser"
+app.config['MYSQL_DB'] = 'MyBook'
+app.config['MYSQL_CURSORCLASS']="DictCursor"
 
 # Intialize MySQL
 mysql = MySQL()

@@ -6,13 +6,13 @@ This file creates your application.
 """
 
 from app import app, login_manager
-from flask import render_template, request, redirect, url_for, flash
+from flask import render_template, request, redirect, url_for, flash,session
 from flask_login import login_user, logout_user, current_user, login_required
 from app.forms import LoginForm, SignupForm,CommentForm
 from app.models import UserProfile
 from app.database import *
 from werkzeug.security import check_password_hash
-
+USERNAME=''
 userdatabase={'id':'0011',
             'firstname':'lincoln',
             'lastname':"brown",
@@ -58,7 +58,13 @@ def secure_page():
 @app.route('/profile')
 @login_required 
 def profile():
-    user={'photo':'thinking.png','username':'linkist10','first_name':'lincoln','last_name':'brown',
+    p=session.get('USERNAME')
+    print(p)
+    print (ProfileInfo(p))
+    print(nextProfileID(), nextUserID())
+    
+    user=ProfileInfo(p)
+    {'photo':'thinking.png','username':'linkist10','first_name':'lincoln','last_name':'brown',
     'email':'libks12@gmail.com.com',
     'Address':'yuugy','gender':'male','mobile_number':'8767991129','DOB':'nov 5,1997','date_joined':'ddgg','biography':' Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa architecto dicta deleniti est, accusamus explicabo impedit blanditiis sapiente repellendus eligendi? Accusantium molestiae voluptates debitis, perspiciatis eos iusto commodi deleniti laudantium!'}
     friends=[{'photo':'thinking.png','first_name':'lincoln','last_name':'brown','username':'linkist10','gender':'male'},
@@ -116,20 +122,19 @@ def login():
         password = form.password.data
         
         userlog=get_user(username)
-        print(userlog)
-
-        user = UserProfile(userdatabase['firstname'],userdatabase['lastname'],
-        userdatabase['username'],userdatabase['Password'])
-        user.id=userdatabase['username']
+        user = UserProfile(userlog['Username'],userlog['Password'])
+        
+        
         if user is not None and check_password_hash(user.password, password):
             remember_me = False
             # get user id, load into session
             login_user(user,remember_me)
-            #flash('Login successful.', 'success')
-            # remember to flash a message to the user
-            print('login sucessfull')
+            flash('Login successful.', 'success')
+            
+            print('login sucessfull',user.password)
+            session['USERNAME'] = user.username
             return redirect(url_for('secure_page'))
-            # they should be redirected to a secure-page route instead
+           
         else:
             flash('Username or Password is incorrect.', 'danger')
 
@@ -149,13 +154,11 @@ def logout():
 # the user ID stored in the session
 @login_manager.user_loader
 def load_user(username):
-    if username != userdatabase['username']:
-        return
-
-    user = UserProfile(userdatabase['firstname'],userdatabase['lastname'],
-        userdatabase['username'],userdatabase['Password'])
-    user.id = username
-    return user
+    userlog=get_user(username)
+    if userlog:
+        user = UserProfile(userlog['Username'],userlog['Password'])
+        return user
+    return
 
 ###
 # The functions below should be applicable to all Flask apps.
