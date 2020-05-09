@@ -29,12 +29,22 @@ def home():
     signupform=SignupForm()
     if request.method == 'POST':
         if signupform.validate_on_submit():
-            first=signupform.First_Name.data
-            signupform.Last_Name.data
-            email=signupform.Email.data
-            signupform.Password.data
-            signupform.Mobile_number.data
-            add_user(first,email)
+            Fname=signupform.First_Name.data
+            Lname=signupform.Last_Name.data
+            Email=signupform.Email.data
+            Password=signupform.Password.data
+            Phonenumber=signupform.Mobile_number.data
+            Gender=signupform.Gender.data
+            DOB=signupform.DOB.data
+            Relationshipstatus=signupform.RelationShipStatus.data
+            Bio=signupform.Bio.data
+            Username=signupform.Username.data
+            print(Username,Password,Bio,Relationshipstatus,
+                    Fname,Lname,Gender,DOB,Email,Phonenumber)
+
+            results=NewUserandprofile(Username,Password,Bio,Relationshipstatus,
+                    Fname,Lname,Gender,DOB,Email,Phonenumber)
+            print(results)           
             flash('Sign Up successfull,Lets Goo!.', 'success')
             return redirect(url_for('login'))
         else:

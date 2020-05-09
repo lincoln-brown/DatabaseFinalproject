@@ -41,10 +41,17 @@ Primary key (ProfileId,PhoneNumber),
 Foreign key (ProfileId) REFERENCES Profiles(profileId) ON DELETE CASCADE
 );
 
-select(select count(ProfileId)from Profiles);
+insert into Profiles values('profileId','username','password','bio','relationshipStatus');
+insert into Profiles values('profileId2','2username','password','bio','relationshipStatus');
+
+insert into Profiles values('profileI4d','u5sername','password','bio','relationshipStatus');
+
+insert into Profiles values('profileId7','u9sername','password','bio','relationshipStatus');
+
+insert into Profiles values('profile42Id','use32rname','password','bio','relationshipStatus');
 
 DELIMITER //
-CREATE PROCEDURE NewUser(in username varchar(30),
+CREATE PROCEDURE NewUser(in uname varchar(30),
 							profileId varchar(25),
 							userId Varchar(25),
 							password Varchar(30),
@@ -58,18 +65,19 @@ CREATE PROCEDURE NewUser(in username varchar(30),
 							phoneNumber varchar(20)
 )
 begin
-	IF EXISTS (SELECT * FROM Profiles WHERE Username = username) then
+	IF EXISTS (SELECT 1 FROM Profiles WHERE Username = uname) then
 	BEGIN
-	 select 'user exist ';
+	 SELECT 'Taken';
 	END ;
 	ELSE
 	BEGIN
 	 
-	insert into Profiles values(profileId,username,password,bio,relationshipStatus);
+	insert into Profiles values(profileId,uname,password,bio,relationshipStatus);
 	insert into Users values(userId,fname,lname,gender,dOB);
 	insert into User_profile values(userId,profileId);
 	insert into profile_email values(profileId,email);
 	insert into profile_phonenumber values(profileId,phoneNumber);
+	COMMIT;
 	select 'user added';
 	END;
 	END IF ;
@@ -78,16 +86,15 @@ end //
 DELIMITER ;
 
 
-CALL NewUser('theusername','theprofileid','theuserid','thepassword',
-			  'thebio','shipStatus','thefname','thelname','thegender',now(),'themail','thephonenumber');
+CALL NewUser('theusername','theprofileid','theuserid','thepassword','thebio','shipStatus','thefname','thelname','thegender',now(),'themail','thephonenumber');
 
 select *from Users;
 select *from Profiles;
 select *from User_profile;
 select *from profile_email;
 select *from profile_phonenumber;
-CALL NewUser('theusername','theprofileid','theuserid','thepassword',
-			  'thebio','shipStatus','thefname','thelname','thegender',now(),'themail','thephonenumber');
+
+
 /*
 LOAD DATA LOCAL INFILE './profiles.csv'
 INTO table Profiles 

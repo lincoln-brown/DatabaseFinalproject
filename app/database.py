@@ -79,11 +79,16 @@ def NewUserandprofile(username,password,bio,relationshipStatus,
     fname,lname,gender,dOB,email,phoneNumber):
     profileId=nextProfileID()
     userId=nextUserID() 
-        
+    #put in try exceet block after test
     cur = connect_cursor_db()
-    cur.callproc('NewUser',[username,profileId,userId,password,
-    bio,relationshipStatus,fname,lname,gender,dOB,email,phoneNumber])
-    results=cur.stored_results()
+    cur.callproc( "NewUser", (username,profileId,userId,password,bio,relationshipStatus,fname,lname,gender,dOB,email,phoneNumber) )
+    r =cur.fetchone()
+    print('iam',r)
+    query='Call NewUser(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'
+    cur.execute(query,(username,profileId,userId,password,bio,relationshipStatus,fname,lname,gender,dOB,email,phoneNumber))
+    results =cur.fetchone()
+    cur.close()
+    
     return results    
         
 
