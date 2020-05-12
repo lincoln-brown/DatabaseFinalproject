@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block header %}
+{% include "authHeader.html" %}
+{% endblock %}
+
+
+{% block main %}
+<div>    
+    <form class="findfriends" action="{{ url_for('FindFriends') }}" method="POST">
+            {{ searchform.csrf_token }}
+            <h3>FindFriends</h3>
+            {{ searchform.Search(class="form-control findfriendsearch ") }}
+            <button type='submit' class="btn btn-warning ">Send</button>
+    </form>
+    <div class="flash">
+        {% include 'flash_messages.html' %}   
+        
+    </div>
+<div class="findfriends">
+    {% if usersfriends %}
+    {%for usersfriends in usersfriends %}
+    <div class="friends">
+        <div class="profile">
+            <div class="friendspic">
+                <img class="pic" src={{url_for('static',filename="images/"+usersfriends.Gender)}}/>
+            </div>
+            <div class="info"> 
+             <h5><strong>{{usersfriends.Fname}} {{usersfriends.Lname}}</strong></h5>
+             <img src="{{url_for('static', filename='icons/user.png')}}" alt="user" class="icons"><span class="ds">{{usersfriends.Username}}</span><br><br>
+             <img src="{{url_for('static', filename='icons/gender.png')}}" alt="user" class="icons"><span class="ds">{{usersfriends.Gender}}</span>
+         </div >
+         <div class="friendbtn">
+
+             <form class="" method="get" action="{{url_for('AddFriend',profileid=usersfriends.ProfileID)}}">
+                 
+                 <button class="btn btn-primary" href="#">Add as Friend  </button>
+                </form>
+                <form action="">
+                    <a class="btn btn-success" href="#">View Profile</a>
+                </form>
+                
+            </div>
+             
+         </div>
+
+
+    </div>
+
+    {%endfor%}
+    {%endif%}
+
+
+
+ </div>
+ 
+</div>
+{% endblock %}

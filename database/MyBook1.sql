@@ -94,10 +94,24 @@ foreign key (UserId) REFERENCES Users(UserId) ON DELETE CASCADE,
 foreign key(PhotoId) REFERENCES Photo(PhotoId) ON DELETE CASCADE
 );
 
+/*=-------------------------to change----------------------------------*/
+
+
+
+/* derived from friendship entity and profile entity relationship */
+/* derived from self reliance relation on Profile (profile of friend .`.profileid==FriendsProfileid) */
+Create table Profile_friends(
+ProfileId varchar(25),
+FriendsProfileId varchar(25),
+FriendGroupName varchar(20),
+Primary key (ProfileId,FriendsProfileId),
+Foreign key (FriendsProfileId) REFERENCES Profiles(ProfileId) ON DELETE CASCADE,
+Foreign key (ProfileId) REFERENCES Profiles(ProfileId) ON DELETE CASCADE
+);
 
 /* derived from Post entity */
 Create table Post(
-PostId varchar(15),
+PostId int(11) NOT NULL AUTO_INCREMENT,
 PostTypeName varchar(20),
 PostBody varchar(50),
 Primary key(PostId)
@@ -105,26 +119,44 @@ Primary key(PostId)
 
 
 /* derived from User entity and Post entity */
-Create table User_post(
-UserId Varchar(15),
-PostId Varchar(15),
+Create table Profile_post(
+ProfileId Varchar(25),
+PostId int(11),
 DateofUPO Date,
-Primary key(UserId, PostId),
-foreign key (UserId) REFERENCES Users(UserId) ON DELETE CASCADE,
+Primary key(ProfileId, PostId),
+foreign key (ProfileId) REFERENCES Profiles(ProfileId) ON DELETE CASCADE,
 foreign key (PostId) REFERENCES Post(PostId) ON DELETE CASCADE
+
 );
 
-/* derived from self reliance relation on User (User is a friend to another user) */
-Create table Friendship(
-UserId varchar(15),
-FriendId varchar(15),
-FriendTypeName varchar(20),
-FStatus Boolean,
-Primary key(UserId,FriendId),
-Foreign key (UserId) REFERENCES Users(UserId) ON DELETE CASCADE
+/* derived from entity comment*/
+Create table Comment(
+CommentId int(11) NOT NULL AUTO_INCREMENT,
+CommentBody Varchar(50),
+Primary Key (CommentId)
+);
+
+/* derived from User entity and Comment entity relationship */
+Create table Profile_comment(
+ProfileId varchar(25),
+CommentId int(11),
+DateofUC Date,
+Primary key (ProfileId, CommentId),
+foreign key (ProfileId) REFERENCES Profiles(ProfileId) ON DELETE CASCADE,
+foreign key (CommentId) REFERENCES Comment(CommentId) ON DELETE CASCADE
+);
+
+/* derived from Post entity and Comment entity relationship */
+Create table Post_comment(
+PostId int(11),
+CommentId int(11),
+Primary key(PostId,CommentId),
+foreign key (PostId) REFERENCES Post(PostId) ON DELETE CASCADE,
+foreign key (CommentId) REFERENCES Comment(CommentId) ON DELETE CASCADE
 );
 
 
+/*---------------------------------------above changed---------------------------------------------------------*/
 /* derived from entity group */
 Create table Groups(
 GroupId varchar(15),
@@ -152,31 +184,6 @@ Foreign key (UserId) REFERENCES Users(UserId) ON DELETE CASCADE,
 Foreign key(GroupId) REFERENCES Groups(GroupId) ON DELETE CASCADE
 );
 
-/* derived from entity comment*/
-Create table Comment(
-CommentId varchar(15),
-CommentBody Varchar(50),
-Primary Key (CommentId)
-);
-
-/* derived from User entity and Comment entity relationship */
-Create table User_comment(
-UserId varchar(15),
-CommentId varchar(15),
-DateofUC Date,
-Primary key (UserId, CommentId),
-foreign key (UserId) REFERENCES Users(UserId) ON DELETE CASCADE,
-foreign key (CommentId) REFERENCES Comment(CommentId) ON DELETE CASCADE
-);
-
-/* derived from Post entity and Comment entity relationship */
-Create table Post_comment(
-PostId varchar(15),
-CommentId varchar(15),
-Primary key(PostId,CommentId),
-foreign key (PostId) REFERENCES Post(PostId) ON DELETE CASCADE,
-foreign key (CommentId) REFERENCES Comment(CommentId) ON DELETE CASCADE
-);
 
 /* derived from User entity and Group entity relationship (Friend is a member in group) */
 Create table Groupmembership(
@@ -187,7 +194,7 @@ Primary key(GroupId,UserId),
 Foreign key (userId) REFERENCES Users(UserId) ON DELETE CASCADE,
 Foreign key (GroupId) REFERENCES Groups(GroupId) ON DELETE CASCADE
 );
-
+/*--------------------------------------------------------------------------------------------*/
 DELIMITER //
 CREATE PROCEDURE NewUser(in uname varchar(30),
 							profileId varchar(25),
@@ -217,7 +224,7 @@ begin
 	insert into profile_phonenumber values(profileId,phoneNumber);
 	insert into	profile_address values(profileId,profileId,profileId,profileId);
 	COMMIT;
-	select 'user added';
+	select 'User_added';
 	END;
 	END IF ;
 end //
@@ -236,12 +243,12 @@ INTO table Profiles
 FIELDS TERMINATED BY ',' 
 ENCLOSED BY '"' LINES TERMINATED BY '\n' IGNORE 1 ROWS;
 
-
-
+/*
 LOAD DATA LOCAL INFILE './User_profile.csv'
 INTO table User_profile 
 FIELDS TERMINATED BY ',' 
 ENCLOSED BY '' LINES TERMINATED BY '\n' IGNORE 1 ROWS;
+*/
 
 
 LOAD DATA LOCAL INFILE './profile_email.csv'
@@ -270,14 +277,40 @@ LOAD DATA LOCAL INFILE './User_photo.csv'
 INTO table User_photo 
 FIELDS TERMINATED BY ',' 
 ENCLOSED BY '"' LINES TERMINATED BY '\n' IGNORE 1 ROWS;
-
+*/
 
 LOAD DATA LOCAL INFILE './Post.csv'
 INTO table Post 
 FIELDS TERMINATED BY ',' 
 ENCLOSED BY '"' LINES TERMINATED BY '\n' IGNORE 1 ROWS;
 
+LOAD DATA LOCAL INFILE './Profile_post.csv'
+INTO table Profile_post 
+FIELDS TERMINATED BY ',' 
+ENCLOSED BY '"' LINES TERMINATED BY '\n' IGNORE 1 ROWS;
 
+
+LOAD DATA LOCAL INFILE './Comment.csv'
+INTO table Comment 
+FIELDS TERMINATED BY ',' 
+ENCLOSED BY '"' LINES TERMINATED BY '\n' IGNORE 1 ROWS;
+
+LOAD DATA LOCAL INFILE './Profile_comment.csv'
+INTO table Profile_comment 
+FIELDS TERMINATED BY ',' 
+ENCLOSED BY '"' LINES TERMINATED BY '\n' IGNORE 1 ROWS;
+
+LOAD DATA LOCAL INFILE './Post_comment.csv'
+INTO table Post_comment 
+FIELDS TERMINATED BY ',' 
+ENCLOSED BY '"' LINES TERMINATED BY '\n' IGNORE 1 ROWS;
+
+
+
+
+
+
+/*
 LOAD DATA LOCAL INFILE './Friendship.csv'
 INTO table Friendship 
 FIELDS TERMINATED BY ',' 
@@ -298,20 +331,9 @@ INTO table ContentEditor
 FIELDS TERMINATED BY ',' 
 ENCLOSED BY '"' LINES TERMINATED BY '\n' IGNORE 1 ROWS;
 
-LOAD DATA LOCAL INFILE './Comment.csv'
-INTO table Comment 
-FIELDS TERMINATED BY ',' 
-ENCLOSED BY '"' LINES TERMINATED BY '\n' IGNORE 1 ROWS;
 
-LOAD DATA LOCAL INFILE './User_comment.csv'
-INTO table User_comment 
-FIELDS TERMINATED BY ',' 
-ENCLOSED BY '"' LINES TERMINATED BY '\n' IGNORE 1 ROWS;
 
-LOAD DATA LOCAL INFILE './Post_comment.csv'
-INTO table Post_comment 
-FIELDS TERMINATED BY ',' 
-ENCLOSED BY '"' LINES TERMINATED BY '\n' IGNORE 1 ROWS;
+
 
 LOAD DATA LOCAL INFILE './GroupMembership.csv'
 INTO table Groupmembership 

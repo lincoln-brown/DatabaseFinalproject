@@ -5,8 +5,10 @@
 
 
 {% block main %}
-<h1>Profile</h1>
+
 <div class="mainblock">
+    <div class="px011">
+    <h3>Profile</h3>
 <div class="profile_details">
     <div class="profilemoretop">
          <div class="pic">
@@ -26,39 +28,48 @@
      </div>
          <div class="profileaboutme">
              <h5>About me </h5>
-             <p>{{user.biography}}</p>
+             <p>{{user.Bio}}</p>
      
     
          </div>
  <div class="profilemorebtn">
      
-     <button class="btn btn-success">Make Post</button>
-     <button class="btn btn-primary">Photos</button>
+    <form  action="{{url_for('PandC')}}">
+        <button class="btn btn-success">Make Post</button>
+    </form>
+    <form action="">
+        <button class="btn btn-primary">Photos</button>
+
+    </form>
  
  </div>
  
  
- </div>
+ </div></div>
+ <div class="px011b">
+    <h3>Friends</h3>
  <div class="usersfriends">
     {% if usersfriends %}
     {%for usersfriends in usersfriends %}
     <div class="friends">
         <div class="profile">
             <div class="friendspic">
-                <img class="pic" src={{url_for('static',filename="images/"+usersfriends.photo)}}/>
+                <img class="pic" src={{url_for('static',filename="images/"+usersfriends.Gender)}}/>
             </div>
             <div class="info"> 
-             <h5><strong>{{usersfriends.first_name}} {{usersfriends.last_name}}</strong></h5>
-             <img src="{{url_for('static', filename='icons/user.png')}}" alt="user" class="icons"><span class="ds">{{usersfriends.username}}</span><br><br>
-             <img src="{{url_for('static', filename='icons/gender.png')}}" alt="user" class="icons"><span class="ds">{{usersfriends.gender}}</span>
-         </div >
-             <form class="friendsbtn" method="get" action="{{url_for('groups')}}">
-                 <a class="btn btn-success" href="#">View Profile</a>
-                 <a class="btn btn-primary" href="#">Follow</a>
-             </form>
+             <h5><strong>{{usersfriends.Fname}} {{usersfriends.Lname}}</strong></h5>
+             <img src="{{url_for('static', filename='icons/user.png')}}" alt="user" class="icons"><span class="ds">{{usersfriends.Username}}</span><br><br>
+             <img src="{{url_for('static', filename='icons/gender.png')}}" alt="user" class="icons"><span class="ds">{{usersfriends.Gender}}</span>
+            </div >
+
+            <div class="friendbtn">
+                <form action="">
+                    <a class="btn btn-success" href="#">View Profile</a>
+                </form>
+            </div>
             
              
-         </div>
+        </div>
 
 
     </div>
@@ -69,6 +80,7 @@
 
 
  </div>
+</div>
  
 </div>
 

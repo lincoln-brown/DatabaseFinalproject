@@ -36,14 +36,14 @@ with open('profiles.csv','w',newline='') as f:
          for i in range (0,macs):
             thewriter.writerow([ProfileId[i],Username[i],fake.password(length=10),fake.sentence(nb_words=20, variable_nb_words=False, ext_word_list=None),fake.random.choice(FRelationshipStatus)])
 
-
+'''
 # populating table User_profile
 with open('User_profile.csv','w',newline='') as f:
      thewriter = csv.writer(f)
      thewriter.writerow(['UserId','ProfileId'])
      for i in range (0,macs):
      	thewriter.writerow([UserId[i],ProfileId[i]])
-
+'''
 # populating table profile_email
 with open('profile_email.csv','w',newline='') as f:
      thewriter = csv.writer(f)
@@ -78,22 +78,22 @@ with open('User_photo.csv','w',newline='') as f:
      thewriter.writerow(['UserId','PhotoId','DateUP'])
      for i in range (1,500000):
           thewriter.writerow([fake.random_int(min=1, max=500000),fake.random_int(min=1, max=500000),fake.date_between(start_date='-10y', end_date='today')])
-
+'''
 #populating table Post
 FPostType=['Text','Pic']
 with open('Post.csv','w',newline='') as f:
      thewriter = csv.writer(f)
      thewriter.writerow(['PostId','PostTypeName','PostBody'])
-     for i in range (1,500000):
-          thewriter.writerow([fake.random_int(min=1, max=500000),fake.random.choice(FPostType),fake.sentence(nb_words=6, variable_nb_words=False, ext_word_list=None)])
+     for i in range (macs):
+          thewriter.writerow([i,fake.random.choice(FPostType),fake.sentence(nb_words=6, variable_nb_words=False, ext_word_list=None)])
 
 #populating table User_post
-with open('User_post.csv','w',newline='') as f:
+with open('Profile_post.csv','w',newline='') as f:
      thewriter = csv.writer(f)
-     thewriter.writerow(['UserId','PostId','DateUPO'])
-     for i in range (1,500000):
-          thewriter.writerow([fake.random_int(min=1, max=500000),fake.random_int(min=1, max=500000),fake.date_between(start_date='-10y', end_date='today')])
-
+     thewriter.writerow(['ProfileId','PostId','DateUPO'])
+     for i in range (macs):
+          thewriter.writerow([ProfileId[i],i,fake.date_between(start_date='-10y', end_date='today')])
+'''
 #populating table Friendship
 FFriendTypeName=['Work','Relative','School']
 with open('Friendship.csv','w',newline='') as f:
@@ -122,28 +122,29 @@ with open('ContentEditor.csv','w',newline='') as f:
      thewriter.writerow(['UserId','GroupId'])
      for i in range (1,500000):
          thewriter.writerow([fake.random_int(min=1, max=500000),fake.random_int(min=1, max=500000)])
-
+'''
 #populating table Comment
 with open('Comment.csv','w',newline='') as f:
      thewriter = csv.writer(f)
      thewriter.writerow(['CommentId','CommentBody'])
-     for i in range (1,500000):
-          thewriter.writerow([fake.random_int(min=1, max=500000),fake.sentence(nb_words=6, variable_nb_words=False, ext_word_list=None)])
+     for i in range (macs):
+          thewriter.writerow([i,fake.sentence(nb_words=6, variable_nb_words=False, ext_word_list=None)])
 
 #populating table User_comment
-with open('User_comment.csv','w',newline='') as f:
+with open('Profile_comment.csv','w',newline='') as f:
      thewriter = csv.writer(f)
-     thewriter.writerow(['UserId','CommentId','DateUC'])
-     for i in range (1,500000):
-         thewriter.writerow([fake.random_int(min=1, max=500000),fake.random_int(min=1, max=500000),fake.date_between(start_date='-5y', end_date='today')])
+     thewriter.writerow(['ProfileId','CommentId','DateUC'])
+     for i in range (macs):
+         thewriter.writerow([ProfileId[i],fake.random_int(min=1, max=100000),fake.date_between(start_date='-5y', end_date='today')])
 
 #populating table Post_comment
 with open('Post_comment.csv','w',newline='') as f:
      thewriter = csv.writer(f)
      thewriter.writerow(['PostId','CommentId'])
-     for i in range (1,500000):
-          thewriter.writerow([fake.random_int(min=1, max=500000),fake.random_int(min=1, max=500000)])
 
+     for i in range (macs):
+          thewriter.writerow([fake.random_int(min=1, max=100000),fake.random_int(min=1, max=100000)])
+'''
 #populating table GroupMembership
 FMemberType=['Editor','Regular']
 with open('GroupMembership.csv','w',newline='') as f:

@@ -23,4 +23,10 @@ class SignupForm(FlaskForm):
 
 class CommentForm(FlaskForm):
     Comments=StringField('Message',validators=[DataRequired()],widget=TextArea())
+
+class SearchForm(FlaskForm):
+    Search=StringField('Search',validators=[DataRequired()])
+
+class PostForm(FlaskForm):
+    Post = StringField('Whats on your Mind',validators=[DataRequired()],widget=TextArea())
 	

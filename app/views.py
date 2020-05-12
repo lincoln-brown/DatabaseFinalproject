@@ -8,7 +8,7 @@ This file creates your application.
 from app import app, login_manager
 from flask import render_template, request, redirect, url_for, flash,session
 from flask_login import login_user, logout_user, current_user, login_required
-from app.forms import LoginForm, SignupForm,CommentForm
+from app.forms import LoginForm, SignupForm,CommentForm,SearchForm,PostForm
 from app.models import UserProfile
 from app.database import *
 from werkzeug.security import check_password_hash
@@ -44,21 +44,48 @@ def home():
 
             results=NewUserandprofile(Username,Password,Bio,Relationshipstatus,
                     Fname,Lname,Gender,DOB,Email,Phonenumber)
-            print(results)           
-            flash('Sign Up successfull,Lets Goo!.', 'success')
-            return redirect(url_for('login'))
+            print(results)
+            
+            if results== {'Taken':'Taken'}:
+                flash(' Sorry that Username in not available. ','danger')
+            elif results=={'User_added':'User_added'}:
+                flash('Sign Up successfull,Lets Goo!.', 'success')
+                return redirect(url_for('login'))
+            else:
+                flash('That weird it seems like Somthing Went wrong!!','warning')
+
+            
         else:
-            flash('Somting went wrong please try again!.', 'danger')
+            flash('Something went wrong please try again!.', 'danger')
             return render_template('home.html',form=signupform)
             
     """Render website's home page."""
     return render_template('home.html',form=signupform)
 
 
-@app.route('/about/')
-def about():
-    """Render the website's about page."""
-    return render_template('about.html')
+@app.route('/findfriends/',methods=["GET", "POST"])
+@login_required
+def FindFriends():
+    form=SearchForm()
+    if request.method == "POST" and form.validate_on_submit():
+        search=form.Search.data
+        search=SearchUsers(search)
+        print(search)
+        return render_template('findfriends.html',usersfriends=search,searchform=form)
+
+    usersfriends=AllUsers()
+    return render_template('findfriends.html',usersfriends=usersfriends,searchform=form)
+
+@app.route('/Addfriend/<profileid>')  
+def AddFriend(profileid):
+    print(profileid)
+    ThisProfileid=session.get('ThisProfileid')
+    FriendGroup='work'
+    res=AddFriends(ThisProfileid,profileid,FriendGroup)
+    flash(res['message'], res['alert'])
+    return redirect(url_for('FindFriends'))
+   
+
 
 @app.route('/secure-page')
 @login_required 
@@ -68,22 +95,14 @@ def secure_page():
 @app.route('/profile')
 @login_required 
 def profile():
-    p=session.get('USERNAME')
-    print(p)
-    print (ProfileInfo(p))
-    print(nextProfileID(), nextUserID())
-    
-    user=ProfileInfo(p)
-    {'photo':'thinking.png','username':'linkist10','first_name':'lincoln','last_name':'brown',
-    'email':'libks12@gmail.com.com',
-    'Address':'yuugy','gender':'male','mobile_number':'8767991129','DOB':'nov 5,1997','date_joined':'ddgg','biography':' Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa architecto dicta deleniti est, accusamus explicabo impedit blanditiis sapiente repellendus eligendi? Accusantium molestiae voluptates debitis, perspiciatis eos iusto commodi deleniti laudantium!'}
-    friends=[{'photo':'thinking.png','first_name':'lincoln','last_name':'brown','username':'linkist10','gender':'male'},
-    {'photo':'thinking.png','first_name':'lincoln','last_name':'brown','username':'linkist10','gender':'male'},
-    {'photo':'thinking.png','first_name':'lincoln','last_name':'brown','username':'linkist10','gender':'male'},
-    {'photo':'thinking.png','first_name':'lincoln','last_name':'brown','username':'linkist10','gender':'male'},
-    {'photo':'thinking.png','first_name':'lincoln','last_name':'brown','username':'linkist10','gender':'male'},
-    {'photo':'thinking.png','first_name':'lincoln','last_name':'brown','username':'linkist10','gender':'male'},
-    {'photo':'thinking.png','first_name':'lincoln','last_name':'brown','username':'linkist10','gender':'male'}]
+    USERNAME=session.get('USERNAME')
+    user=ProfileInfo(USERNAME)
+    print(user)
+    session['ThisProfileid']=user['ProfileId']
+    friends=Friendsinfo(user['ProfileId'])
+    #print(profileFriends(user['ProfileId']))
+
+   
     return render_template("profile.html",user=user, usersfriends=friends)
 
 @app.route('/Groups')
@@ -95,34 +114,38 @@ def groups():
 @app.route('/Comments_post')
 @login_required 
 def PandC():
+    postform=PostForm()
     form=CommentForm()
-
-    friendspost=[{'name':'links',
-    'post':'Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste, nemo ex! Consequuntur quasi asperiores libero, vero explicabo dicta unde eos ipsam atque, corporis commodi aliquid laboriosam eligendi minima esse consectetur?',
-    'photo':'thinking.png',
-    'comments':[{'photo':'sleep.png','comentersname':'josh','comment':'comment here'},
-                {'photo':'sleep.png','comentersname':'paul','comment':'comment here2'},
-                {'photo':'sleep.png','comentersname':'josh','comment':'comment here'},
-                {'photo':'sleep.png','comentersname':'paul','comment':'comment here2'}]},
-    {'name':'links',
-    'post':'post here',
-    'photo':'thinking.png',
-    'comments':[{'photo':'sleep.png','comentersname':'josh','comment':'comment here'},
-                {'photo':'sleep.png','comentersname':'paul','comment':'comment here2'}]}
-    ]
+    profileId=session.get('ThisProfileid')
+    mypost=ALlPandC(profileId)
+    friendspost=allFriendspandc(profileId)
+    #print('this is my post',mypost)
     
-    mypost=[{'name':'links',
-    'post':'Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste, nemo ex! Consequuntur quasi asperiores libero, vero explicabo dicta unde eos ipsam atque, corporis commodi aliquid laboriosam eligendi minima esse consectetur?',
-    'photo':'thinking.png',
-    'comments':[{'photo':'sleep.png','comentersname':'josh','comment':'comment here'},
-                {'photo':'sleep.png','comentersname':'paul','comment':'comment here2'}]},
-    {'name':'links',
-    'post':'Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste, nemo ex!laboriosam eligendi minima esse consectetur?',
-    'photo':'thinking.png',
-    'comments':[{'photo':'sleep.png','comentersname':'josh','comment':'comment here'},
-                {'photo':'sleep.png','comentersname':'paul','comment':'comment here2'}]}
-    ]
-    return render_template("commentPost.html",CommentForm=form,friendspost=friendspost,mypost=mypost)
+    return render_template("commentPost.html",CommentForm=form,Postform=postform,friendspost=friendspost,mypost=mypost)
+
+@app.route('/MakePost', methods=["GET", "POST"])
+@login_required 
+def MakePost():
+    postform=PostForm()
+    profileId=session.get('ThisProfileid')
+    if request.method == "POST" and postform.validate_on_submit():
+        postbody=postform.Post.data
+        Posttype='text'
+        addpost(profileId, Posttype,postbody)
+    
+    return redirect(url_for('PandC'))
+
+@app.route('/MakeComment/<postid>', methods=["GET", "POST"])
+@login_required 
+def Makecomment(postid):
+    commentform=CommentForm()
+    if request.method == "POST" and commentform.validate_on_submit():
+        print(commentform.Comments.data)
+        print(postid)
+    return redirect(url_for('PandC'))
+
+
+
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -132,19 +155,22 @@ def login():
         password = form.password.data
         
         userlog=get_user(username)
-        user = UserProfile(userlog['Username'],userlog['Password'])
-        
-        
-        if user is not None and check_password_hash(user.password, password):
-            remember_me = False
-            # get user id, load into session
-            login_user(user,remember_me)
-            flash('Login successful.', 'success')
+        if userlog:
+            user = UserProfile(userlog['Username'],userlog['Password'])
             
-            print('login sucessfull',user.password)
-            session['USERNAME'] = user.username
-            return redirect(url_for('secure_page'))
-           
+            
+            if user is not None and check_password_hash(user.password, password):
+                remember_me = False
+                # get user id, load into session
+                login_user(user,remember_me)
+                flash('Login successful.', 'success')
+                
+                print('login sucessfull',user.password)
+                session['USERNAME'] = user.username
+                return redirect(url_for('profile'))
+            
+            else:
+                flash('Username or Password is incorrect.', 'danger')
         else:
             flash('Username or Password is incorrect.', 'danger')
 
