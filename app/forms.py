@@ -4,6 +4,10 @@ from wtforms.fields.html5 import DateField
 from wtforms.validators import InputRequired, DataRequired, Email
 from wtforms.widgets import TextArea
 
+class CreatGroup(FlaskForm):
+    Groupname=StringField('GroupName', validators=[InputRequired()]) 
+    Description= StringField('Group Description',validators=[DataRequired()],widget=TextArea())
+
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[InputRequired()])
     password = PasswordField('Password', validators=[InputRequired()])

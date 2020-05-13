@@ -99,7 +99,7 @@ DELIMITER //
 CREATE PROCEDURE NewComment (in commentBdy Varchar(50),
 	ProfileId varchar(25),
 	CommentId int(11),
-	PostId int(11),)
+	PostId int(11))
 
 begin
 	insert into Comment (CommentBody)values(commentBdy);
@@ -111,6 +111,27 @@ begin
 end //
 
 DELIMITER ;
+
+
+
+DELIMITER //
+CREATE PROCEDURE Newgroup(in groupname varchar(30),
+Des varchar(50),
+profileId varchar(25),
+groupid int(11),
+
+)
+begin
+	insert into Groups (GroupName,Descriptions) values(groupname,Des);
+	insert into Profiles_group values(profileId,groupid,now());
+	insert into ContentEditor values(profileId,groupid);
+	select "group created"
+	COMMIT;
+
+end //
+
+DELIMITER ;
+
 
 
 /*

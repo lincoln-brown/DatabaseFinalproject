@@ -282,3 +282,35 @@ def updateAddress(ProfileId,Street,City):
     query='Update profile_address SET Street=%s, City=%s where ProfileId=%s'
     cur.execute(query,(Street,City,ProfileId))
     connect_commit_db()
+
+def nextgroupid():
+    cur = connect_cursor_db()
+    query='select count(GroupId) from Groups'
+    cur.execute(query)
+    postid = cur.fetchone()
+    return int(postid['count(GroupId)'])+1
+
+def createGroup(groupname,des,profileId):
+    groupid=nextgroupid()
+    cur = connect_cursor_db()
+    cur.callproc( "Newgroup",(groupname,des,profileId,groupid))
+    results =cur.fetchone()
+    return results
+
+def Groups():
+    cur = connect_cursor_db()
+    query='select * from Groups limit 20'
+    cur.execute(query)
+    allgroups = cur.fetchall()
+    return allgroups
+
+def GroupsMembers(GroupId,profile):
+    cur = connect_cursor_db()
+    try:
+        query='insert into Groupmembership values(%s,%s)'
+        cur.execute(query,(profile,GroupId))
+        connect_commit_db()
+        return "Group Joined "
+    except (cur.IntegrityError ):
+        return "Already a member "
+    

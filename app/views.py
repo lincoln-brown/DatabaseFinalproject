@@ -8,7 +8,7 @@ This file creates your application.
 from app import app, login_manager
 from flask import render_template, request, redirect, url_for, flash,session
 from flask_login import login_user, logout_user, current_user, login_required
-from app.forms import LoginForm, SignupForm,CommentForm,SearchForm,PostForm,EditprofileForm
+from app.forms import LoginForm,CreatGroup, SignupForm,CommentForm,SearchForm,PostForm,EditprofileForm
 from app.models import UserProfile
 from app.database import *
 from werkzeug.security import check_password_hash
@@ -105,11 +105,28 @@ def profile():
    
     return render_template("profile.html",user=user, usersfriends=friends)
 
-@app.route('/Groups')
+@app.route('/Groups',methods=["GET", "POST"])
 @login_required 
 def groups():
-    return render_template("Groups.html")
+    form=CreatGroup()
+    Allgroups=Groups()
+    if request.method == "POST" and form.validate_on_submit():
+        groupname=form.Groupname.data
+        des=form.Description.data
+        profileId=session.get('ThisProfileid')
 
+        createGroup(groupname,des,profileId)
+        return redirect(url_for('groups'))
+    
+    return render_template("Groups.html",form=form, Allgroups=Allgroups)
+
+@app.route('/JoinGroup/<Groupid>')  
+def JoinGroup(Groupid):
+    
+    profileId=session.get('ThisProfileid')
+    note=GroupsMembers(Groupid,profileId)
+    flash(note, 'success')
+    return redirect(url_for('groups'))
 
 @app.route('/Comments_post')
 @login_required 
@@ -178,6 +195,7 @@ def EditProfile():
             updateemail(profileId,email)
             updatePhonenumber(profileId,PhoneNumber)
             updateAddress(profileId,Street,City)
+            return redirect(url_for('EditProfile'))
 
     return render_template("EditProfile.html",form=editform,current=user)
 

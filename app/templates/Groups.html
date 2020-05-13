@@ -5,6 +5,57 @@
 
 
 {% block main %}
-<h1>Groups</h1>
 
-{% endblock %}
+<h1>Groups</h1>
+{% include 'flash_messages.html' %}
+<div class="maingroup">
+
+    <div class="grouplist ">
+        <h5>Group list </h5>
+        {% for Allgroups in Allgroups%}
+        <div class="gro">
+        <h6>{{Allgroups.GroupId}}</h6>
+        <h5>{{Allgroups.GroupName}}</h5>
+        <p>{{Allgroups.Descriptions}}</p>
+
+        <form action="{{url_for('JoinGroup',Groupid=Allgroups.GroupId)}}" method="GET">
+
+            <button  class="btn btn-primary" type="submit">Join Group</button>
+        </form>
+
+
+        </div>
+        {%endfor%}
+        
+        
+        
+        
+    </div>
+    
+    
+    <div class="creategroup">
+        <h4>Create group </h4>
+
+        <form action="{{url_for('groups')}}" method="POST">
+            {{ form.csrf_token }}
+
+            <div>
+                <h6>{{form.Groupname.label}}</h6>
+                {{form.Groupname(class="form-control")}}
+            </div><br>
+
+            <div>
+                <h6>{{form.Description.label}}</h6>
+                {{form.Description(class="form-control", rows="5")}}
+            </div><br>
+
+            <button  type="submit"class="btn btn-primary" >Create Group</button>
+
+
+        </form>
+        
+        
+    </div>
+    
+</div>
+    {% endblock %}

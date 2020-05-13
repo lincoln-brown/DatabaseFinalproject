@@ -159,39 +159,38 @@ foreign key (CommentId) REFERENCES Comment(CommentId) ON DELETE CASCADE
 /*---------------------------------------above changed---------------------------------------------------------*/
 /* derived from entity group */
 Create table Groups(
-GroupId varchar(15),
+GroupId int(11) NOT NULL AUTO_INCREMENT,
 GroupName varchar(30),
 Descriptions varchar(50),
 Primary key(GroupId)
 );
 
-/* derived from User entity and Group entity relationship (User creates group) */
-Create table User_group(
-UserId varchar(15),
-GroupId varchar(15),
+/* derived from User entity and Group entity relationship (User'profile creates group) */
+Create table Profiles_group(
+ProfileId varchar(25),
+GroupId int(11),
 DateofUCG date,
-Primary key (UserId,GroupId),
-foreign key (UserId) REFERENCES Users(UserId) ON DELETE CASCADE,
+Primary key (ProfileId,GroupId),
+foreign key (ProfileId) REFERENCES Profiles(ProfileId) ON DELETE CASCADE,
 foreign key (GroupId) REFERENCES Groups(GroupId) ON DELETE CASCADE
 );
 
 /* derived from (User selects User )relationship */
 Create table ContentEditor(
-UserId varchar(15),
-GroupId varchar(15),
-Primary key(UserId,GroupId),
-Foreign key (UserId) REFERENCES Users(UserId) ON DELETE CASCADE,
+ProfileId varchar(25),
+GroupId int(11),
+Primary key(ProfileId,GroupId),
+Foreign key (ProfileId) REFERENCES Profiles(ProfileId) ON DELETE CASCADE,
 Foreign key(GroupId) REFERENCES Groups(GroupId) ON DELETE CASCADE
 );
 
 
 /* derived from User entity and Group entity relationship (Friend is a member in group) */
 Create table Groupmembership(
-UserId varchar(15),
-MemberTypeName varchar(20),
-GroupId varchar(15),
-Primary key(GroupId,UserId),
-Foreign key (userId) REFERENCES Users(UserId) ON DELETE CASCADE,
+ProfileId varchar(25),
+GroupId int(11),
+Primary key(GroupId,ProfileId),
+Foreign key (ProfileId) REFERENCES Profiles(ProfileId) ON DELETE CASCADE,
 Foreign key (GroupId) REFERENCES Groups(GroupId) ON DELETE CASCADE
 );
 /*--------------------------------------------------------------------------------------------*/
@@ -245,6 +244,26 @@ begin
 	COMMIT;
 
 end //
+
+
+DELIMITER //
+CREATE PROCEDURE Newgroup(in groupname varchar(30),
+Des varchar(50),
+profileId varchar(25),
+groupid int(11))
+begin
+	insert into Groups (GroupName,Descriptions) values(groupname,Des);
+	insert into Profiles_group values(profileId,groupid,now());
+	insert into ContentEditor values(profileId,groupid);
+	select "group created";
+	COMMIT;
+
+end //
+
+DELIMITER ;
+
+
+
 
 show tables;
 
