@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block header %}
+{% include "authHeader.html" %}
+{% endblock %}
+
+{% block main %}
+{% include 'flash_messages.html' %}
+
+<h1>Edit Your Profile </h1>
+<form id="editprofile" method="post" action="{{url_for('EditProfile')}}">
+    {{ form.csrf_token }}
+    
+    <div><h5>UserName</h5>
+		<h6>{{current.Username}}</h6>
+	</div><br>
+
+ 	<div>{{ form.First_Name.label }}<br>
+ 	{{ form.First_Name(class="form-control",value=current.Fname) }}
+ 	</div> <br>
+
+ 	<div>{{ form.Last_Name.label }}<br>
+ 	{{ form.Last_Name(class="form-control",value=current.Lname) }}
+	</div><br>
+
+	
+
+	<div>{{ form.RelationShipStatus.label }}<br>
+	{{ form.RelationShipStatus(class="form-control",value=current.RelationshipStatus) }}
+	</div> <br>
+
+
+	<div>{{ form.Gender.label }}<br>
+		{{ form.Gender(class="form-control",value=current.Gender) }}
+	</div> <br>
+
+	<div>	
+		{{ form.DOB.label }}<br>
+		{{ form.DOB(class="form-control",value=current.DOB) }}
+		</div><br>
+    <div>
+
+    {{ form.Mobile_number.label }}<br>
+    {{ form.Mobile_number(class="form-control",value=current.PhoneNumber) }}
+    </div><br>
+ 	
+
+ 	<div>{{ form.Email.label }}<br>
+ 	{{ form.Email(class="form-control",value=current.email) }}
+     </div><br>
+     
+     <div>{{ form.Street.label }}<br>
+        {{ form.Street(class="form-control",value=current.Street) }}
+    </div><br>
+
+    <div>{{ form.City.label }}<br>
+        {{ form.City(class="form-control",value=current.City) }}
+    </div><br>
+
+ 	<div>	
+     {{ form.Bio.label }}<br>
+    <p>{{current.Bio}}</p>  
+ 	{{ form.Bio(class="form-control",value=current.Bio) }}
+     </div><br>
+     
+    
+
+    <button type="submit" name="submit" class="btn btn-primary">Update Profile </button>
+   
+  
+</form>
+
+{% endblock %}

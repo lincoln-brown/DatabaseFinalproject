@@ -97,7 +97,7 @@ def getNumbers(Profileid):
 def ProfileInfo(username):
     try:
         cur = connect_cursor_db()
-        query='SELECT Users.UserId,Profiles.ProfileId,Username,Fname,Lname,Gender,DOB,Profiles.Bio FROM Users join User_profile on Users.UserId=User_profile.UserId join Profiles on User_profile.ProfileId=Profiles.ProfileId WHERE Profiles.Username = %s'
+        query='SELECT Users.UserId,Profiles.ProfileId,Username,RelationshipStatus,Fname,Lname,Gender,DOB,Profiles.Bio FROM Users join User_profile on Users.UserId=User_profile.UserId join Profiles on User_profile.ProfileId=Profiles.ProfileId WHERE Profiles.Username = %s'
         cur.execute(query,(username,))
         account = cur.fetchone()
         mobile_number=getNumbers(account['ProfileId'])
@@ -239,5 +239,46 @@ def allFriendspandc(profileId):
         allFriendspandc.append(listOfpost)
     return allFriendspandc
 
-
+def nextcommentid():
+    cur = connect_cursor_db()
+    query='select count(CommentId) from Comment'
+    cur.execute(query)
+    postid = cur.fetchone()
+    return int(postid['count(CommentId)'])+1
  
+def MakeComment(ProfileID,CommentBody,postId):
+    commentid=nextcommentid()
+    cur = connect_cursor_db()
+    cur.callproc( "NewComment",(CommentBody,ProfileID,commentid,postId))
+    results =cur.fetchone()
+    return results
+
+def updateProfile(ProfileId,Bio,RelationshipStatus):
+    cur = connect_cursor_db()
+    query='Update Profiles SET Bio=%s,RelationshipStatus=%s where ProfileId=%s'
+    cur.execute(query,(Bio,RelationshipStatus,ProfileId))
+    connect_commit_db()
+
+def updateUsers(UsersId,Fname,Lname,Gender,DOB):
+    cur = connect_cursor_db()
+    query='Update Users SET Fname=%s,Lname=%s,Gender=%s,DOB=%s where UserId=%s'
+    cur.execute(query,(Fname,Lname,Gender,DOB,UsersId))
+    connect_commit_db()
+
+def updateemail(ProfileId,email):
+    cur = connect_cursor_db()
+    query='Update profile_email SET email=%s where ProfileId=%s'
+    cur.execute(query,(email,ProfileId))
+    connect_commit_db()
+
+def updatePhonenumber(ProfileId,PhoneNumber):
+    cur = connect_cursor_db()
+    query='Update profile_phonenumber SET PhoneNumber=%s where ProfileId=%s'
+    cur.execute(query,(PhoneNumber,ProfileId))
+    connect_commit_db()
+
+def updateAddress(ProfileId,Street,City):
+    cur = connect_cursor_db()
+    query='Update profile_address SET Street=%s, City=%s where ProfileId=%s'
+    cur.execute(query,(Street,City,ProfileId))
+    connect_commit_db()

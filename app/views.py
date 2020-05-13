@@ -8,7 +8,7 @@ This file creates your application.
 from app import app, login_manager
 from flask import render_template, request, redirect, url_for, flash,session
 from flask_login import login_user, logout_user, current_user, login_required
-from app.forms import LoginForm, SignupForm,CommentForm,SearchForm,PostForm
+from app.forms import LoginForm, SignupForm,CommentForm,SearchForm,PostForm,EditprofileForm
 from app.models import UserProfile
 from app.database import *
 from werkzeug.security import check_password_hash
@@ -119,7 +119,7 @@ def PandC():
     profileId=session.get('ThisProfileid')
     mypost=ALlPandC(profileId)
     friendspost=allFriendspandc(profileId)
-    #print('this is my post',mypost)
+    print('next comment id',nextcommentid())
     
     return render_template("commentPost.html",CommentForm=form,Postform=postform,friendspost=friendspost,mypost=mypost)
 
@@ -140,10 +140,46 @@ def MakePost():
 def Makecomment(postid):
     commentform=CommentForm()
     if request.method == "POST" and commentform.validate_on_submit():
-        print(commentform.Comments.data)
-        print(postid)
+        profileid=session.get('ThisProfileid')
+        commentbody=commentform.Comments.data
+        postid
+        print(MakeComment(profileid,commentbody,postid))
+
+
     return redirect(url_for('PandC'))
 
+@app.route("/Editprofile", methods=["GET", "POST"])
+@login_required 
+def EditProfile():
+    editform=EditprofileForm()
+    USERNAME=session.get('USERNAME')
+    user=ProfileInfo(USERNAME)
+    
+    if request.method == 'POST':
+        if editform.validate_on_submit():
+            Fname=editform.First_Name.data
+            Bio=editform.Bio.data
+            RelationshipStatus=editform.RelationShipStatus.data
+            Fname=editform.First_Name.data
+            Lname=editform.Last_Name.data
+            Gender=editform.Gender.data
+            DOB=editform.DOB.data
+            email=editform.Email.data
+            PhoneNumber=editform.Mobile_number.data
+            Street=editform.Street.data
+            City=editform.City.data
+
+
+
+            UsersId=user['UserId']
+            profileId=session.get('ThisProfileid')
+            updateProfile(profileId,Bio,RelationshipStatus)
+            updateUsers(UsersId,Fname,Lname,Gender,DOB)
+            updateemail(profileId,email)
+            updatePhonenumber(profileId,PhoneNumber)
+            updateAddress(profileId,Street,City)
+
+    return render_template("EditProfile.html",form=editform,current=user)
 
 
 

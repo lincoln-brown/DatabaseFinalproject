@@ -21,6 +21,18 @@ class SignupForm(FlaskForm):
     RelationShipStatus = SelectField(label='Relation Ship Status',validators=[DataRequired()],choices=[('Single','Single'),('Married','Married')])
     Bio = StringField('Describe Your Self ',validators=[DataRequired()],widget=TextArea())
 
+class EditprofileForm(FlaskForm):
+    First_Name = StringField('First Name',validators=[DataRequired()])
+    Last_Name = StringField('Last Name',validators=[DataRequired()])
+    Gender = SelectField(label='Gender',validators=[DataRequired()],choices=[('Male','Male'),('Female','Female')])
+    DOB = DateField('Date of Birth', validators=[DataRequired()],format='%Y-%m-%d')
+    Email = StringField('Email',validators=[DataRequired(), Email()])
+    Mobile_number= StringField('Mobile Number',validators=[DataRequired()])
+    RelationShipStatus = SelectField(label='Relation Ship Status',validators=[DataRequired()],choices=[('Single','Single'),('Married','Married')])
+    Bio = StringField('Bio ',validators=[DataRequired()],widget=TextArea())
+    Street=StringField('Address (Street)',validators=[DataRequired()])
+    City=StringField('Address (City)',validators=[DataRequired()])
+
 class CommentForm(FlaskForm):
     Comments=StringField('Message',validators=[DataRequired()],widget=TextArea())
 

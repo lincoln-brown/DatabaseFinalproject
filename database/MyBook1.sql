@@ -231,6 +231,21 @@ end //
 
 DELIMITER ;
 
+DELIMITER //
+CREATE PROCEDURE NewComment (in commentBdy Varchar(50),
+	ProfileId varchar(25),
+	CommentId int(11),
+	PostId int(11))
+
+begin
+	insert into Comment (CommentBody)values(commentBdy);
+	insert into Profile_comment values(ProfileId,CommentId,now());
+	insert into Post_comment values(PostId,CommentId);
+		Select "comment ADDED";
+	COMMIT;
+
+end //
+
 show tables;
 
 LOAD DATA LOCAL INFILE './Users.csv'

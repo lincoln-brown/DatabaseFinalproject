@@ -77,6 +77,7 @@ begin
 	insert into User_profile values(userId,profileId);
 	insert into profile_email values(profileId,email);
 	insert into profile_phonenumber values(profileId,phoneNumber);
+		
 	COMMIT;
 	select 'user added';
 	END;
@@ -93,6 +94,23 @@ select *from Profiles;
 select *from User_profile;
 select *from profile_email;
 select *from profile_phonenumber;
+
+DELIMITER //
+CREATE PROCEDURE NewComment (in commentBdy Varchar(50),
+	ProfileId varchar(25),
+	CommentId int(11),
+	PostId int(11),)
+
+begin
+	insert into Comment (CommentBody)values(commentBdy);
+	insert into Profile_comment values(ProfileId,CommentId,now());
+	insert into Post_comment values(PostId,CommentId);
+		Select "comment ADDED";
+	COMMIT;
+
+end //
+
+DELIMITER ;
 
 
 /*

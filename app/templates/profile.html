@@ -5,7 +5,7 @@
 
 
 {% block main %}
-
+{% include 'flash_messages.html' %} 
 <div class="mainblock">
     <div class="px011">
     <h3>Profile</h3>
@@ -20,10 +20,11 @@
             <img src="{{url_for('static', filename='icons/username.png')}}" alt="user" class="icons"><span class="ds">{{user.Username}}</span> <br><br>
             <img src="{{url_for('static', filename='icons/email.png')}}" alt="user" class="icons"><span class="ds">{{user.email}} </span><br><br>
             <img src="{{url_for('static', filename='icons/mobile_number.png')}}" alt="user" class="icons"><span class="ds">{{user.PhoneNumber}}</span> <br><br>
-            <img src="{{url_for('static', filename='icons/birthdate.png')}}" alt="user" class="icons"><span class="ds">{{user.DOB}}</span> <br><br>
+            <img src="{{url_for('static', filename='icons/date.png')}}" alt="user" class="icons"><span class="ds">{{user.DOB}}</span> <br><br>
             <img src="{{url_for('static', filename='icons/gender.png')}}" alt="user" class="icons"><span class="ds">{{user.Gender}}</span> <br><br>
-            <img src="{{url_for('static', filename='icons/location.png')}}" alt="user" class="icons"><span class="ds">{{user.Street}}{{user.City}}</span> <br><br>
-            <img src="{{url_for('static', filename='icons/date.png')}}" alt="user" class="icons"><span class="ds">Date Joined  {{user.DOB}}</span>
+            <img src="{{url_for('static', filename='icons/location.png')}}" alt="user" class="icons"><span class="ds">{{user.Street}}</span> <br><br>
+            <img src="{{url_for('static', filename='icons/map.png')}}" alt="user" class="icons"><span class="ds">{{user.City}}</span> <br><br>
+            <img src="{{url_for('static', filename='icons/relationship.png')}}" alt="user" class="icons"><span class="ds">  {{user.RelationshipStatus}}</span>
          </div>
      </div>
          <div class="profileaboutme">
@@ -43,7 +44,9 @@
     </form>
  
  </div>
- 
+    <form class="edtprofile" action="{{url_for('EditProfile')}}">
+        <button class="btn btn-warning"> Edit Profile</button>
+    </form>
  
  </div></div>
  <div class="px011b">
