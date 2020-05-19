@@ -28,14 +28,14 @@
         {%for mypandc in mypost %}
         <div class="mypostblock">
             <div class="post">
-                <img class="pic-post" src={{url_for('static',filename="images/"+mypandc['Post'].UserId)}}/>
+                <img class="pic-post" src={{url_for('static',filename="images/"+mypandc['Post'].Photoname)}}/>
                 <span class="ds">{{mypandc['Post'].Username}}</span><br><br>            
                 <p>{{mypandc['Post'].PostBody}}</p>
             </div>
                 <h4>Comments</h4>
             {%for comment in mypandc['comments'] %}
             <div class="commentpost">
-                <img class="pic-post" src={{url_for('static',filename="images/"+comment.UserId)}}/>
+                <img class="pic-post" src={{url_for('static',filename="images/"+comment.Photoname)}}/>
                 <span class="ds">{{comment.Username}}</span><br>           
                 <p>{{comment.CommentBody}}</p> 
             </div>
@@ -61,14 +61,14 @@
         <div class="friendspostblock">
             
             <div class="post">
-                <img class="pic-post" src={{url_for('static',filename="images/"+fpost['Post'].UserId)}}/>
+                <img class="pic-post" src={{url_for('static',filename="images/"+fpost['Post'].Photoname)}}/>
                 <span class="ds">{{fpost['Post'].Username}}</span><br><br>
                 <p>{{fpost['Post'].PostBody}}</p>
             </div>
                 <h4>Comments</h4>
                 {%for comment in fpost['comments'] %}
             <div class="commentpost">
-                    <img class="pic-post" src={{url_for('static',filename="images/"+comment.UserId)}}/>
+                    <img class="pic-post" src={{url_for('static',filename="images/"+comment.Photoname)}}/>
                     <span class="ds">{{comment.Username}}</span><br>
                     <p>{{comment.CommentBody}}</p>
             </div>

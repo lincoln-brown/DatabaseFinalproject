@@ -4,11 +4,12 @@ Jinja2 Documentation:    http://jinja.pocoo.org/2/documentation/
 Werkzeug Documentation:  http://werkzeug.pocoo.org/documentation/
 This file creates your application.
 """
-
+import os
+from werkzeug.utils import secure_filename
 from app import app, login_manager
 from flask import render_template, request, redirect, url_for, flash,session
 from flask_login import login_user, logout_user, current_user, login_required
-from app.forms import LoginForm,CreatGroup, SignupForm,CommentForm,SearchForm,PostForm,EditprofileForm
+from app.forms import LoginForm,CreatGroup,Photo, SignupForm,CommentForm,SearchForm,PostForm,EditprofileForm
 from app.models import UserProfile
 from app.database import *
 from werkzeug.security import check_password_hash
@@ -87,10 +88,31 @@ def AddFriend(profileid):
    
 
 
-@app.route('/secure-page')
+@app.route('/Photos-page',methods=["GET","POST"])
 @login_required 
-def secure_page():
-    return render_template("secure_page.html")
+def Photos():
+    photo=Photo()
+    UserId=session.get('Thisuserid')
+    profilepic=getprofilepic(UserId)
+    if profilepic is None:
+        Photoname="nophotofound.png"
+        profilepic={"Photoname":Photoname}
+    pics=getallpic(UserId)
+    if request.method == "POST":
+        if photo.validate_on_submit():
+            photo=photo.photo.data
+            filename = secure_filename(photo.filename)
+            photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            Photoname=filename
+            UserId=session.get('Thisuserid')
+            print('kl',photo)
+            category="profile"
+            uploadphoto(UserId,category, Photoname)
+            return redirect(url_for('Photos'))
+        else:
+            flash('That weird it seems like Somthing Went wrong!!','warning')
+    
+    return render_template("photos.html",photoform=photo,userpfpic=profilepic,allpic=pics)
 
 @app.route('/profile')
 @login_required 
@@ -99,11 +121,33 @@ def profile():
     user=ProfileInfo(USERNAME)
     print(user)
     session['ThisProfileid']=user['ProfileId']
+    session['Thisuserid']=user['UserId']
+    
+    profilepic=getprofilepic(user['UserId'])
+    if profilepic is None:
+        Photoname="nophotofound.png"
+        profilepic={"Photoname":Photoname}
     friends=Friendsinfo(user['ProfileId'])
     #print(profileFriends(user['ProfileId']))
+    return render_template("profile.html",user=user, usersfriends=friends,profilepic=profilepic)
 
-   
-    return render_template("profile.html",user=user, usersfriends=friends)
+@app.route('/friends_profile<Username>',methods=["GET", "POST"])
+@login_required 
+def FriendsProfile(Username):
+    form=CommentForm()
+    user=ProfileInfo(Username)
+    mypost=ALlPandC(user['ProfileId'])
+    profilepic=getprofilepic(user['UserId'])
+    if profilepic is None:
+        Photoname="nophotofound.png"
+        profilepic={"Photoname":Photoname}
+
+    mypost=ALlPandC(user['ProfileId'])
+       
+
+    return render_template("iprofile.html",user=user,profilepic=profilepic,CommentForm=form,mypost=mypost)
+
+
 
 @app.route('/Groups',methods=["GET", "POST"])
 @login_required 
@@ -224,9 +268,9 @@ def login():
                 return redirect(url_for('profile'))
             
             else:
-                flash('Username or Password is incorrect.', 'danger')
+                flash('username or Password is incorrect.', 'danger')
         else:
-            flash('Username or Password is incorrect.', 'danger')
+            flash('Username or password is incorrect.', 'danger')
 
     return render_template("login.html", form=form)
 
@@ -234,7 +278,7 @@ def login():
 @login_required
 def logout():
     logout_user()
-    flash('You have been logged out.', 'danger')
+    flash('You are logged out.', 'warning')
     return redirect(url_for('home'))
 
 

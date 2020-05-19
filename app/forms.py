@@ -3,6 +3,7 @@ from wtforms import StringField, PasswordField,SelectField
 from wtforms.fields.html5 import DateField
 from wtforms.validators import InputRequired, DataRequired, Email
 from wtforms.widgets import TextArea
+from flask_wtf.file import FileField,FileRequired,FileAllowed
 
 class CreatGroup(FlaskForm):
     Groupname=StringField('GroupName', validators=[InputRequired()]) 
@@ -46,3 +47,5 @@ class SearchForm(FlaskForm):
 class PostForm(FlaskForm):
     Post = StringField('Whats on your Mind',validators=[DataRequired()],widget=TextArea())
 	
+class Photo(FlaskForm):
+    photo=FileField('Photo',validators=[FileRequired(),FileAllowed(['jpg','png'])])

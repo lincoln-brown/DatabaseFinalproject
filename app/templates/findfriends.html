@@ -22,7 +22,7 @@
     <div class="friends">
         <div class="profile">
             <div class="friendspic">
-                <img class="pic" src={{url_for('static',filename="images/"+usersfriends.Gender)}}/>
+                <img class="pic" src={{url_for('static',filename="images/"+usersfriends.Photoname)}}/>
             </div>
             <div class="info"> 
              <h5><strong>{{usersfriends.Fname}} {{usersfriends.Lname}}</strong></h5>
@@ -35,9 +35,7 @@
                  
                  <button class="btn btn-primary" href="#">Add as Friend  </button>
                 </form>
-                <form action="">
-                    <a class="btn btn-success" href="#">View Profile</a>
-                </form>
+                
                 
             </div>
              

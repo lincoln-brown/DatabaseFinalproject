@@ -6,6 +6,7 @@
 
 {% block main %}
 {% include 'flash_messages.html' %} 
+
 <div class="mainblock">
     <div class="px011">
     <h3>Profile</h3>
@@ -33,52 +34,40 @@
      
     
          </div>
- <div class="profilemorebtn">
-     
-    <form  action="{{url_for('PandC')}}">
-        <button class="btn btn-success">Make Post</button>
-    </form>
-    <form action="{{url_for('Photos')}}">
-        <button class="btn btn-primary">Photos</button>
 
-    </form>
- 
- </div>
-    <form class="edtprofile" action="{{url_for('EditProfile')}}">
-        <button class="btn btn-warning"> Edit Profile</button>
-    </form>
+    
  
  </div></div>
  <div class="px011b">
-    <h3>Friends</h3>
+    <h3>{{user.Fname}}'s Posts</h3>
  <div class="usersfriends">
-    {% if usersfriends %}
-    {%for usersfriends in usersfriends %}
-    <div class="friends">
-        <div class="profile">
-            <div class="friendspic">
-                <img class="pic" src={{url_for('static',filename="images/"+usersfriends.Photoname)}}/>
-            </div>
-            <div class="info"> 
-             <h5><strong>{{usersfriends.Fname}} {{usersfriends.Lname}}</strong></h5>
-             <img src="{{url_for('static', filename='icons/user.png')}}" alt="user" class="icons"><span class="ds">{{usersfriends.Username}}</span><br><br>
-             <img src="{{url_for('static', filename='icons/gender.png')}}" alt="user" class="icons"><span class="ds">{{usersfriends.Gender}}</span>
-            </div >
-
-            <div class="friendbtn">
-                <form method="GET" action="{{url_for('FriendsProfile',Username=usersfriends.Username)}}">
-                    <button type="submit" class="btn btn-success" >View Profile</button>
-                </form>
-            </div>
-            
-             
+    
+    {%for mypandc in mypost %}
+    <div class="mypostblock">
+        <div class="post">
+            <img class="pic-post" src={{url_for('static',filename="images/"+mypandc['Post'].Photoname)}}/>
+            <span class="ds">{{mypandc['Post'].Username}}</span><br><br>            
+            <p>{{mypandc['Post'].PostBody}}</p>
         </div>
-
-
-    </div>
-
-    {%endfor%}
-    {%endif%}
+            <h4>Comments</h4>
+        {%for comment in mypandc['comments'] %}
+        <div class="commentpost">
+            <img class="pic-post" src={{url_for('static',filename="images/"+comment.Photoname)}}/>
+            <span class="ds">{{comment.Username}}</span><br>           
+            <p>{{comment.CommentBody}}</p> 
+        </div>
+            {%endfor%}
+        <div class="comments">
+            <form action="{{url_for('Makecomment',postid=mypandc['Post'].PostId)}}" method="POST">
+                {{ CommentForm.csrf_token }}
+                {{ CommentForm.Comments(class="md-textarea form-control textare") }}
+                <button type="submit" class="btn btn-warning commentsubmitbtn">Send</button>
+                
+            </form>
+        </div>
+        </div>
+            {%endfor%}
+    
 
 
 
@@ -86,5 +75,7 @@
 </div>
  
 </div>
+
+
 
 {% endblock %}

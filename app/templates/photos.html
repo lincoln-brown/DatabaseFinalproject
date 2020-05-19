@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block header %}
+{% include "authHeader.html" %}
+{% endblock %}
+
+
+{% block main %}
+<h1>Photos</h1>
+{% include 'flash_messages.html' %}
+<div class="profilepic">
+    <div>
+        
+        <img class="pic"  src={{url_for('static',filename="images/"+userpfpic.Photoname)}}>
+       
+    </div>
+    <div>
+        <form method="POST" enctype="multipart/form-data" action="{{ url_for('Photos') }}">
+            {{ photoform.csrf_token }}
+            <div>
+                <label>Please Upload a </label>
+                {{photoform.photo.label}}<br>
+                {{photoform.photo(class='btn btn-primary')}}
+              </div>
+              <button type="submit" class="btn btn-primary">Upload</button>
+        </form>
+    </div>
+
+</div>
+<div class="photos">
+    <h2>My Photos</h2>
+    {%for pic in allpic%}
+    <img class="pic"  src={{url_for('static',filename="images/"+pic.Photoname)}}>
+    {%endfor%}
+</div>
+
+{% endblock %}

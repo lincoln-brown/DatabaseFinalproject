@@ -78,7 +78,7 @@ Foreign key (ProfileId) REFERENCES Profiles(ProfileId) ON DELETE CASCADE
 
 /* derived from entity photo */
 Create table Photo(
-PhotoId Varchar(15),
+PhotoId int(11)NOT NULL AUTO_INCREMENT,
 category varchar (30),
 Photoname Varchar(30),
 Primary key(PhotoId)
@@ -86,8 +86,8 @@ Primary key(PhotoId)
 
 /* derived from User entity and Photo entity relationship */
 Create table User_photo(
-UserId varchar(15),
-PhotoId varchar(15),
+UserId varchar(25),
+PhotoId int(11)NOT NULL AUTO_INCREMENT,
 DateofUP Date,
 Primary key(UserId,PhotoId),
 foreign key (UserId) REFERENCES Users(UserId) ON DELETE CASCADE,
@@ -255,6 +255,7 @@ begin
 	insert into Groups (GroupName,Descriptions) values(groupname,Des);
 	insert into Profiles_group values(profileId,groupid,now());
 	insert into ContentEditor values(profileId,groupid);
+	Insert into Groupmembership values (profileId,groupid);
 	select "group created";
 	COMMIT;
 

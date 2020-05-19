@@ -3,7 +3,7 @@ from flask_login import LoginManager
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
 
-
+UPLOAD_FOLDER = './app/static/images'
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "change this to be a more random key"
 

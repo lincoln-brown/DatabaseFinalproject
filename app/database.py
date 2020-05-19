@@ -6,14 +6,28 @@ def connect_cursor_db():
 def connect_commit_db():
     return mysql.connection.commit() 
 
-def add_user(name, email):
+def add_Photo(category, Photoname):
     try:    
         cur = connect_cursor_db()
-        cur.execute('insert into users (name, email) values (%s, %s)',
-        (name, email))
+        cur.execute('insert into Photo (category, Photoname)values (%s, %s)',
+        (category, Photoname))
         connect_commit_db()
     except:
         print("something went wrong")
+
+def add_user_Photo(UserId):
+    try:    
+        cur = connect_cursor_db()
+        cur.execute('insert into User_photo (UserId, DateofUP)values (%s, %s)',
+        (UserId,datetime.now() ))
+        connect_commit_db()
+    except:
+        print("something went wrong")
+
+def uploadphoto(UserId,category, Photoname):
+     add_Photo(category, Photoname)
+     add_user_Photo(UserId)
+
 def addpost(Profileid, Posttype,postbody ):
     post(Posttype,postbody)
     postid=getlastpostid()
@@ -48,6 +62,25 @@ def getlastpostid():
     postid = cur.fetchone()
     return int(postid['count(PostId)'])
 
+def getprofilepic(UsersId):
+    try:
+        cur = connect_cursor_db()
+        query='Select Photo.PhotoId, category,Photoname, User_photo.DateofUP from Photo join User_photo on Photo.PhotoId=User_photo.PhotoId where User_photo.UserId=%s and category=%s ORDER by PhotoId DESC'
+        cur.execute(query,(UsersId,'profile',))
+        profilepic = cur.fetchone()
+        return profilepic
+    except connect_cursor_db().Error as e :
+        print("something went wrong", e)
+
+def getallpic(UsersId):
+    try:
+        cur = connect_cursor_db()
+        query='Select Photo.PhotoId, category,Photoname, User_photo.DateofUP from Photo join User_photo on Photo.PhotoId=User_photo.PhotoId where User_photo.UserId=%s ORDER by PhotoId DESC'
+        cur.execute(query,(UsersId,))
+        profilepic = cur.fetchall()
+        return profilepic
+    except connect_cursor_db().Error as e :
+        print("something went wrong", e)
 
 def get_user(username):
     try:
@@ -154,24 +187,60 @@ def Friendsinfo(ProfileId):
     cur = connect_cursor_db()
     for friend in friendlist:
         friend['FriendsProfileId']
-        query='select Fname,Lname,Gender,Profiles.Username from Users join User_profile on Users.UserId=User_profile.UserId join Profiles on User_profile.ProfileId=Profiles.ProfileId WHERE Profiles.ProfileID = %s'
+        query='select Users.UserId, Fname,Lname,Gender,Profiles.Username from Users join User_profile on Users.UserId=User_profile.UserId join Profiles on User_profile.ProfileId=Profiles.ProfileId WHERE Profiles.ProfileID = %s'
         cur.execute(query,(friend['FriendsProfileId'],))
         friend = cur.fetchone()
+        
+        Photo=getprofilepic(friend['UserId'])
+        print (Photo)
+        if Photo is not None:
+            Photoname=Photo['Photoname']
+        else:
+            Photoname="nophotofound.png"
+
+        friend.update({"Photoname":Photoname})
+        
+
         friends.append(friend)
     return friends
 def AllUsers():
     cur = connect_cursor_db()
-    query='select Fname,Lname,Gender,Profiles.Username,Profiles.ProfileID from Users join User_profile on Users.UserId=User_profile.UserId join Profiles on User_profile.ProfileId=Profiles.ProfileId LIMIT 50'
+    query='select Users.UserId, Fname,Lname,Gender,Profiles.Username,Profiles.ProfileID from Users join User_profile on Users.UserId=User_profile.UserId join Profiles on User_profile.ProfileId=Profiles.ProfileId LIMIT 50'
     cur.execute(query)
-    user = cur.fetchall()
-    return user
+    users = cur.fetchall()
+
+    for user in users:
+            
+        Photo=getprofilepic(user['UserId'])
+        
+        if Photo is not None:
+            Photoname=Photo['Photoname']
+        else:
+            Photoname="nophotofound.png"
+
+        user.update({"Photoname":Photoname})
+
+
+    return users
 
 def SearchUsers(uname):
     cur = connect_cursor_db()
-    query='select Profiles.ProfileID, Fname,Lname,Gender,Profiles.Username from Users join User_profile on Users.UserId=User_profile.UserId join Profiles on User_profile.ProfileId=Profiles.ProfileId where Profiles.Username like %s LIMIT 15'
+    query='select Users.UserId, Profiles.ProfileID, Fname,Lname,Gender,Profiles.Username from Users join User_profile on Users.UserId=User_profile.UserId join Profiles on User_profile.ProfileId=Profiles.ProfileId where Profiles.Username like %s LIMIT 15'
     cur.execute(query,("%{}%".format(uname),))
-    user = cur.fetchall()
-    return user
+    users = cur.fetchall()
+    for user in users:
+            
+        Photo=getprofilepic(user['UserId'])
+        
+        if Photo is not None:
+            Photoname=Photo['Photoname']
+        else:
+            Photoname="nophotofound.png"
+
+        user.update({"Photoname":Photoname})
+
+
+    return users
 def AddFriends(profile,friendsprofile,FriendGroup):
     cur = connect_cursor_db()
     try:
@@ -196,8 +265,17 @@ def Getpost(postId):
         cur = connect_cursor_db()
         query='select Users.UserId,Profiles.Username,Post.PostId,Post.PostTypeName,Post.PostBody from Post join Profile_post on Post.PostId=Profile_post.PostId join Profiles on Profile_post.ProfileId=Profiles.ProfileId join User_profile on Profiles.ProfileId=User_profile.Profileid join Users on User_profile.UserId= Users.UserId where Post.PostId= %s'
         cur.execute(query,(postId,))
-        postid = cur.fetchone()
-        return postid
+        posts = cur.fetchone()
+
+        Photo=getprofilepic(posts['UserId'])
+        
+        if Photo is not None:
+            Photoname=Photo['Photoname']
+        else:
+            Photoname="nophotofound.png"
+        posts.update({"Photoname":Photoname})
+
+        return posts
     except connect_cursor_db().error as  e :
         print('There is an error in your getpost function',e)    
 
@@ -209,6 +287,17 @@ def GetComments(postId):
         query='select Users.UserId,Profiles.Username,Comment.CommentId,Comment.CommentBody from Comment join Post_comment on Comment.CommentId=Post_comment.CommentId join Profile_comment on Post_comment.CommentId=Profile_comment.CommentId join Profiles on Profile_comment.ProfileId=Profiles.ProfileId join User_profile on Profiles.ProfileId=User_profile.Profileid join Users on User_profile.UserId= Users.UserId where Post_comment.PostId=%s'
         cur.execute(query,(postId,))
         comments = cur.fetchall()
+        for comment in comments:
+            
+            Photo=getprofilepic(comment['UserId'])
+            
+            if Photo is not None:
+                Photoname=Photo['Photoname']
+            else:
+                Photoname="nophotofound.png"
+
+            comment.update({"Photoname":Photoname})
+
         return comments
     except connect_cursor_db().error as  e :
         print('There is an error in your getpost function',e)         
@@ -235,7 +324,7 @@ def allFriendspandc(profileId):
     allFriendspandc=[]
     friendlist=profileFriends(profileId)
     for friends in friendlist:
-        listOfpost=ALlPandC(friends['FriendsProfileId'])        
+        listOfpost=ALlPandC(friends['FriendsProfileId'])
         allFriendspandc.append(listOfpost)
     return allFriendspandc
 
