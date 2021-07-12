@@ -12,7 +12,7 @@ Drop table if exists User_photo;
 Drop table if exists Post;
 Drop table if exists User_post;
 Drop table if exists Friendship;
-Drop table if exists Groups;
+Drop table if exists `Groups`;
 Drop table if exists User_group;
 Drop table if exists ContentEditor;
 Drop table if exists Comment;
@@ -30,7 +30,7 @@ DOB date,
 Primary key(UserId)
 );
 
-/* derived from entity profile */
+ /*derived from entity profile */
 Create table Profiles(
 ProfileId varchar(25)not null unique,
 Username varchar(30) not null unique,
@@ -126,7 +126,6 @@ DateofUPO Date,
 Primary key(ProfileId, PostId),
 foreign key (ProfileId) REFERENCES Profiles(ProfileId) ON DELETE CASCADE,
 foreign key (PostId) REFERENCES Post(PostId) ON DELETE CASCADE
-
 );
 
 /* derived from entity comment*/
@@ -158,21 +157,21 @@ foreign key (CommentId) REFERENCES Comment(CommentId) ON DELETE CASCADE
 
 /*---------------------------------------above changed---------------------------------------------------------*/
 /* derived from entity group */
-Create table Groups(
+Create table ` Groups`(
 GroupId int(11) NOT NULL AUTO_INCREMENT,
 GroupName varchar(30),
 Descriptions varchar(50),
 Primary key(GroupId)
 );
 
-/* derived from User entity and Group entity relationship (User'profile creates group) */
+ /*derived from User entity and Group entity relationship (User'profile creates group) */
 Create table Profiles_group(
 ProfileId varchar(25),
 GroupId int(11),
 DateofUCG date,
 Primary key (ProfileId,GroupId),
 foreign key (ProfileId) REFERENCES Profiles(ProfileId) ON DELETE CASCADE,
-foreign key (GroupId) REFERENCES Groups(GroupId) ON DELETE CASCADE
+foreign key (GroupId) REFERENCES ` Groups`(GroupId) ON DELETE CASCADE
 );
 
 /* derived from (User selects User )relationship */
@@ -181,7 +180,7 @@ ProfileId varchar(25),
 GroupId int(11),
 Primary key(ProfileId,GroupId),
 Foreign key (ProfileId) REFERENCES Profiles(ProfileId) ON DELETE CASCADE,
-Foreign key(GroupId) REFERENCES Groups(GroupId) ON DELETE CASCADE
+Foreign key(GroupId) REFERENCES ` Groups`(GroupId) ON DELETE CASCADE
 );
 
 
@@ -191,7 +190,7 @@ ProfileId varchar(25),
 GroupId int(11),
 Primary key(GroupId,ProfileId),
 Foreign key (ProfileId) REFERENCES Profiles(ProfileId) ON DELETE CASCADE,
-Foreign key (GroupId) REFERENCES Groups(GroupId) ON DELETE CASCADE
+Foreign key (GroupId) REFERENCES ` Groups`(GroupId) ON DELETE CASCADE
 );
 /*--------------------------------------------------------------------------------------------*/
 DELIMITER //
@@ -244,7 +243,7 @@ begin
 	COMMIT;
 
 end //
-
+DELIMITER ;
 
 DELIMITER //
 CREATE PROCEDURE Newgroup(in groupname varchar(30),
@@ -252,7 +251,7 @@ Des varchar(50),
 profileId varchar(25),
 groupid int(11))
 begin
-	insert into Groups (GroupName,Descriptions) values(groupname,Des);
+	insert into ` Groups` (GroupName,Descriptions) values(groupname,Des);
 	insert into Profiles_group values(profileId,groupid,now());
 	insert into ContentEditor values(profileId,groupid);
 	Insert into Groupmembership values (profileId,groupid);
@@ -278,12 +277,12 @@ INTO table Profiles
 FIELDS TERMINATED BY ',' 
 ENCLOSED BY '"' LINES TERMINATED BY '\n' IGNORE 1 ROWS;
 
-/*
-LOAD DATA LOCAL INFILE './User_profile.csv'
+
+/*LOAD DATA LOCAL INFILE './User_profile.csv'
 INTO table User_profile 
 FIELDS TERMINATED BY ',' 
-ENCLOSED BY '' LINES TERMINATED BY '\n' IGNORE 1 ROWS;
-*/
+ENCLOSED BY '' LINES TERMINATED BY '\n' IGNORE 1 ROWS;*/
+
 
 
 LOAD DATA LOCAL INFILE './profile_email.csv'

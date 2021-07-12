@@ -1,0 +1,3 @@
+steps to set up database
+step1: run MyBook.sql in mysql terminal
+step2: run user_profiles.py in virtual environment 

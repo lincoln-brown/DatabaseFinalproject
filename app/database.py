@@ -374,7 +374,7 @@ def updateAddress(ProfileId,Street,City):
 
 def nextgroupid():
     cur = connect_cursor_db()
-    query='select count(GroupId) from Groups'
+    query='select count(GroupId) from ` Groups`'
     cur.execute(query)
     postid = cur.fetchone()
     return int(postid['count(GroupId)'])+1
@@ -388,7 +388,7 @@ def createGroup(groupname,des,profileId):
 
 def Groups():
     cur = connect_cursor_db()
-    query='select * from Groups limit 20'
+    query='select * from ` Groups` limit 20'
     cur.execute(query)
     allgroups = cur.fetchall()
     return allgroups

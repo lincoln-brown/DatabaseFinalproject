@@ -118,9 +118,7 @@ DELIMITER //
 CREATE PROCEDURE Newgroup(in groupname varchar(30),
 Des varchar(50),
 profileId varchar(25),
-groupid int(11),
-
-)
+groupid int(11))
 begin
 	insert into Groups (GroupName,Descriptions) values(groupname,Des);
 	insert into Profiles_group values(profileId,groupid,now());

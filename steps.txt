@@ -1,0 +1,8 @@
+steps to set up 
+step 1 set up databease 
+2 install pip using sudo apt-get install python-pip
+3 install virtual environment  using python3 -m pip install --user virtualenv
+4 create  virtual env  with python3 -m virtualenv venv
+5 activate virtual environment with source venv/bin/activate
+6 install my sqlclient  using sudo apt-get install python3-dev default-libmysqlclient-dev build-essential followed by pip install mysqlclient
+7 install additional requirements 

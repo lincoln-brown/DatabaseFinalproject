@@ -2,13 +2,13 @@ import mysql.connector
 from datetime import datetime
 startTime = datetime.now()
 macs=500000
-
+print('Starting...')
 userid=[]
 ProfileId=[]
 db_connection = mysql.connector.connect(
 host="localhost",
-user="DEVELOPER",
-passwd="@Links1010",
+user="root",
+passwd="",
 database="MyBook"
 )
 for i in range(100000,600000):
