@@ -277,7 +277,6 @@ INTO table Profiles
 FIELDS TERMINATED BY ',' 
 ENCLOSED BY '"' LINES TERMINATED BY '\n' IGNORE 1 ROWS;
 
-show tables;
 
 /*LOAD DATA LOCAL INFILE './User_profile.csv'
 INTO table User_profile 
